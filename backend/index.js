@@ -10,7 +10,7 @@ const authRoutes = require("./routes/auth.route")
 
 
 
-
+const port = process.env.PORT || 3000
 
 const app = express()
 app.use(cors())
@@ -25,7 +25,7 @@ app.use("/auth", authRoutes)
 
 connectToDB();
 
-app.listen(3000, ()=>{
+app.listen(port, ()=>{
     console.log(`app running on port 3000`);
     
 })
