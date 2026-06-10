@@ -7,6 +7,8 @@ const connectToDB = require('./config/database')
 
 const employeeRoutes = require('./routes/employee.routes')
 const authRoutes = require("./routes/auth.route")
+const deptRoutes = require("./routes/department.routes")
+const leaveRoutes = require("./routes/leave.route")
 
 
 
@@ -20,6 +22,8 @@ app.use(express.json())
 
 app.use("/employee", employeeRoutes)
 app.use("/auth", authRoutes)
+app.use("/dept", deptRoutes)
+app.use("/leave", leaveRoutes)
 
 
 

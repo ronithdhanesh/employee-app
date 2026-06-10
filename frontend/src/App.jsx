@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Dashboard from "./pages/Dashboard"
+import EmployeesPage from "./pages/EmployeesPage"
 import {Routes, Route, BrowserRouter} from 'react-router-dom'
 import CreateEmployee from './components/CreateEmployee'
 import Login from './pages/auth/Login'
@@ -8,6 +8,8 @@ import { LogIn } from 'lucide-react'
 import ProtectedRoute from './components/ProtectedRoute'
 import PublicRoute from './components/PublicRoute'
 import { Navigate } from 'react-router-dom'
+import Dashboard from './pages/Dashboard'
+import DepartmentsPage from './pages/Departments'
 
 function App() {
 
@@ -15,8 +17,21 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route 
-          path='/'
-          element={<Navigate to="/dashboard" />}
+          path='/dashboard'
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/departments'
+          element={<DepartmentsPage />}
+        />
+        <Route
+          path='/employees'
+          element={<EmployeesPage />}
         />
         <Route path="/login" element={
           <PublicRoute>
@@ -29,13 +44,14 @@ function App() {
           </PublicRoute>
         } />
 
-        <Route path="/dashboard" element={
+        <Route path="/employees" element={
           <ProtectedRoute>
-            <Dashboard />
+            <EmployeesPage />
           </ProtectedRoute>
         } />
       </Routes>
     </BrowserRouter>
+    
   )
 }
 

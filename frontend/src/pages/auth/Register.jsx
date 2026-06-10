@@ -59,7 +59,7 @@ const Register = () => {
           response.data.token
       )
 
-      navigate("/dashboard")
+      navigate("/EmployeesPage")
       
 
       console.log(newData);

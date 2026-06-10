@@ -1,154 +1,279 @@
-import React from 'react'
-import {useForm} from 'react-hook-form'
-import {yupResolver} from "@hookform/resolvers/yup"
-import * as yup from 'yup'
-import api from '../api/axios'
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import api from "../api/axios";
 
-const CreateEmployee = ({onClose, refreshEmployees}) => {
+const createEmployeeSchema = yup.object({
+  firstName: yup.string().required("First name is required"),
 
-  const createEmployeeSchema = yup.object().shape({
-    name : yup.string().required('name is required'),
-    id : yup.number('id must be a number').required('id is required').min(0,'id should be atleast 1').positive('id cant be negative'),
-    role : yup.string().required('role is required'),
-    department : yup.string().required('department is required')
-  })
-  const {register,reset, handleSubmit, formState : {errors}} = useForm({
-    resolver : yupResolver(createEmployeeSchema)
+  lastName: yup.string().required("Last name is required"),
+
+  email: yup
+    .string()
+    .email("Enter a valid email")
+    .required("Email is required"),
+
+  phone: yup.string(),
+
+  designation: yup.string().required("Designation is required"),
+
+  departmentId: yup.string().required("Department is required"),
+
+  hireDate: yup.string().required("Hire date is required"),
+
+  status: yup.string().required("Status is required"),
+
+});
+
+const CreateEmployee = ({ onClose, refreshEmployees }) => {
+  const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(createEmployeeSchema),
+    defaultValues: {
+      status: "Active",
+    },
   });
 
-  async function handleFormSubmit(data) {
-    await api.post('/employee/create', data)
-    .then(result=>console.log(result))
-    .catch(err=>console.log(err))
-    console.log(data);
-    await refreshEmployees()
-    onClose();
+  useEffect(() => {
+    fetchDepartments();
+  }, []);
+
+  async function fetchDepartments() {
+    try {
+      const res = await api.get("/dept/get");
+      setDepartments(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
+  async function handleFormSubmit(data) {
+    try {
+      setLoading(true);
+
+      await api.post("/employee/create", data);
+      console.log(data)
+
+      await refreshEmployees();
+      onClose();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const inputClass =
+    "w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 transition focus:border-slate-900 focus:bg-white focus:outline-none";
 
   return (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-    <div className="w-full max-w-xl rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl">
-      <div className="mb-8 flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">
-            Add Employee
-          </h1>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="w-full max-w-4xl rounded-3xl bg-white p-8 shadow-2xl">
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-900">
+              Add Employee
+            </h2>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Create a new employee profile
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={onClose}
-          className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
-        >
-          ✕
-        </button>
-      </div>
-
-      <form
-        onSubmit={handleSubmit(handleFormSubmit)}
-        className="space-y-5"
-      >
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">
-            Full Name
-          </label>
-
-          <input
-            type="text"
-            placeholder="Enter Full Name"
-            {...register("name")}
-            className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 transition focus:border-slate-900 focus:bg-white focus:outline-none"
-          />
-
-          {errors.name && (
-            <p className="mt-2 text-sm font-medium text-red-500">
-              {errors.name.message}
+            <p className="mt-2 text-sm text-slate-500">
+              Create a professional employee profile
             </p>
-          )}
-        </div>
+          </div>
 
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">
-            Employee ID
-          </label>
-
-          <input
-            type="number"
-            placeholder="001"
-            {...register("id")}
-            className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 transition focus:border-slate-900 focus:bg-white focus:outline-none"
-          />
-
-          {errors.id && (
-            <p className="mt-2 text-sm font-medium text-red-500">
-              {errors.id.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">
-            Role
-          </label>
-
-          <input
-            type="text"
-            placeholder="Software Engineer"
-            {...register("role")}
-            className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 transition focus:border-slate-900 focus:bg-white focus:outline-none"
-          />
-
-          {errors.role && (
-            <p className="mt-2 text-sm font-medium text-red-500">
-              {errors.role.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">
-            Department
-          </label>
-
-          <input
-            type="text"
-            placeholder="Engineering"
-            {...register("department")}
-            className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 transition focus:border-slate-900 focus:bg-white focus:outline-none"
-          />
-
-          {errors.department && (
-            <p className="mt-2 text-sm font-medium text-red-500">
-              {errors.department.message}
-            </p>
-          )}
-        </div>
-
-        <div className="flex justify-end gap-3 pt-4">
           <button
             type="button"
             onClick={onClose}
-            className=" cursor-pointer rounded-xl border border-slate-300 px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-100"
+            className="h-10 w-10 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900"
           >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            className=" cursor-pointer rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
-          >
-            Add Employee
+            ✕
           </button>
         </div>
-      </form>
-    </div>
-  </div>
-)
-}
 
-export default CreateEmployee
+        <form
+          onSubmit={handleSubmit(handleFormSubmit)}
+          className="space-y-6"
+        >
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            {/* First Name */}
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                First Name
+              </label>
+
+              <input
+                {...register("firstName")}
+                placeholder="John"
+                className={inputClass}
+              />
+
+              {errors.firstName && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.firstName.message}
+                </p>
+              )}
+            </div>
+
+            {/* Last Name */}
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Last Name
+              </label>
+
+              <input
+                {...register("lastName")}
+                placeholder="Doe"
+                className={inputClass}
+              />
+
+              {errors.lastName && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.lastName.message}
+                </p>
+              )}
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Email Address
+              </label>
+
+              <input
+                type="email"
+                {...register("email")}
+                placeholder="john@company.com"
+                className={inputClass}
+              />
+
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Phone Number
+              </label>
+
+              <input
+                {...register("phone")}
+                placeholder="+91 9876543210"
+                className={inputClass}
+              />
+            </div>
+
+            {/* Designation */}
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Designation
+              </label>
+
+              <input
+                {...register("designation")}
+                placeholder="Software Engineer"
+                className={inputClass}
+              />
+
+              {errors.designation && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.designation.message}
+                </p>
+              )}
+            </div>
+
+            {/* Department */}
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Department
+              </label>
+
+              <select
+                {...register("departmentId")}
+                className={inputClass}
+              >
+
+                {departments.map((dept) => (
+                  <option key={dept._id} value={dept._id}>
+                    {dept.name}
+                  </option>
+                ))}
+              </select>
+
+              {errors.departmentId && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.departmentId.message}
+                </p>
+              )}
+            </div>
+
+            {/* Hire Date */}
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Hire Date
+              </label>
+
+              <input
+                type="date"
+                {...register("hireDate")}
+                className={inputClass}
+              />
+
+              {errors.hireDate && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.hireDate.message}
+                </p>
+              )}
+            </div>
+
+            {/* Status */}
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Employment Status
+              </label>
+
+              <select
+                {...register("status")}
+                className={inputClass}
+              >
+                <option value="Active">Active</option>
+                <option value="On Leave">On Leave</option>
+                <option value="Terminated">Terminated</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div className="flex justify-end gap-3 border-t pt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-xl border border-slate-300 px-5 py-3 font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="rounded-xl bg-slate-900 px-6 py-3 font-medium text-white hover:bg-slate-800 disabled:opacity-50"
+            >
+              {loading ? "Creating..." : "Create Employee"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default CreateEmployee;

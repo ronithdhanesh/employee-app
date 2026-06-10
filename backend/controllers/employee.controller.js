@@ -2,7 +2,7 @@ const EmployeeModel = require('../models/employee.model.js')
 
 const getEmployees = async(req, res) => {
     try {
-        const employees = await EmployeeModel.find({})
+        const employees = await EmployeeModel.find({}).populate("departmentId");
         res.json(employees)
     } catch(err){
         res.status(500).json(err)

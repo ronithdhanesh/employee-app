@@ -1,195 +1,355 @@
+import React, { useState, useEffect } from "react";
 import {
-  Plus,
-  Search,
-  Pencil,
-  Trash2,
-  LogOut, 
+  Users,
+  Building2,
+  CalendarCheck,
+  FileText,
+  TrendingUp,
+  UserPlus,
+  Clock3,
+  ArrowUpRight,
+  LogOut
 } from "lucide-react";
 
-import { React, useEffect, useState } from "react";
-import CreateEmployee from "../components/CreateEmployee";
-import UpdateEmployee from "../components/UpdateEmployee";
+
+
 import { useNavigate } from "react-router-dom";
-import api from "../api/axios";
+import CreateEmployee from "../components/CreateEmployee";
+import CreateDepartment from "../components/CreateDepartment";
+import api from "../api/axios"
 
-export default function EmployeesPage() {
-  const [showCreateJSX, setShowCreateJSX] = useState(false);
-  const [showUpdateJSX, setShowUpdateJSX] = useState(false);
-  const [employees, setEmployees] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  const navigate = useNavigate();
+
+export default function Dashboard() {
+    const [showCreateEmployee, setShowCreateEmployee] = useState(false)
+    const [showCreateDepartment, setShowCreateDepartment] = useState(false)
+    const [employees, setEmployees] = useState([])
+    const [departments, setDepartments] = useState([])
+  const stats = [
+    {
+      title: "Total Employees",
+      value: employees.length,
+      change: "+12%",
+      icon: Users,
+      page : "employees"
+    },
+    {
+      title: "Departments",
+      value: departments.length,
+      change: "+2",
+      icon: Building2,
+      page : "departments"
+    },
+    {
+      title: "Attendance Rate",
+      value: "96%",
+      change: "+4%",
+      icon: CalendarCheck,
+    },
+    {
+      title: "Leave Requests",
+      value: "18",
+      change: "-3",
+      icon: FileText,
+    },
+  ];
+
+  const activities = [
+    {
+      title: "New employee onboarded",
+      description: "Sarah Johnson joined Engineering",
+      time: "2 minutes ago",
+    },
+    {
+      title: "Leave request submitted",
+      description: "Michael Brown requested annual leave",
+      time: "20 minutes ago",
+    },
+    {
+      title: "Department updated",
+      description: "Marketing department information updated",
+      time: "1 hour ago",
+    },
+    {
+      title: "Attendance report generated",
+      description: "Monthly attendance report created",
+      time: "3 hours ago",
+    },
+  ];
+
+  const quickActions = [
+    {
+      title: "Add Employee",
+      icon: UserPlus,
+      onClick : setShowCreateEmployee,
+    },
+    {
+      title: "Add Department",
+      icon: FileText,
+      onClick : setShowCreateDepartment
+    },
+  ];
+
+  const employeesOnLeave = employees.find(employee=>employee.status ==="On Leave")
+
+
+
+  const navigate = useNavigate()
 
   const fetchEmployees = async () => {
     const result = await api.get("/employee/get");
     setEmployees(result.data);
   };
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
-
-  async function handleDelete(id) {
-    await api.delete(`/employee/delete/${id}`);
-    fetchEmployees(); 
+  const fetchDepartments = async() =>{
+    const result = await api.get("/dept/get")
+    setDepartments(result.data)
   }
 
-  const handleLogout = () => {
+    const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
 
-  const filteredEmployees = employees.filter((employee) => {
-    const query = searchQuery.toLowerCase();
-    return (
-      (employee.name && employee.name.toLowerCase().includes(query)) ||
-      (employee.role && employee.role.toLowerCase().includes(query)) ||
-      (employee.department && employee.department.toLowerCase().includes(query))
-    );
-  });
+  function isNewHire(employee) {
+  const hireDate = new Date(employee.hireDate);
+  const today = new Date();
+
+  const diffInMs = today - hireDate;
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+  return diffInDays <= 30;
+}
+
+  useEffect(()=>{
+    fetchEmployees();
+    fetchDepartments();
+  },[])
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
-      <div className="mx-auto max-w-7xl">
-        
-        {/* Header Section */}
-        <div className="mb-8 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-50">
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-slate-900">
-              Employees
+            <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
+              Employee Management System
+            </span>
+
+            <h1 className="mt-4 text-4xl font-bold tracking-tight text-slate-900">
+              Dashboard
             </h1>
+
             <p className="mt-2 text-slate-500">
-              Manage your organization's workforce
+              Monitor employees, departments, attendance, and overall
+              organizational performance.
             </p>
           </div>
 
-          {/* Action Buttons Container */}
-          <div className="flex items-center gap-3">
-            <button
-              className="cursor-pointer flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
-              onClick={() => setShowCreateJSX(true)}
-            >
-              <Plus size={18} />
-              Add Employee
-            </button>
-
-            <button
-              className="cursor-pointer flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-red-50 hover:text-red-600 hover:border-red-200"
-              onClick={handleLogout}
-            >
-              <LogOut size={18} />
-              Logout
-            </button>
-          </div>
+          <button className="cursor-pointer flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+                  onClick={handleLogout}
+          >
+            Logout
+            <LogOut size={18} />
+          </button>
         </div>
 
-        {showCreateJSX && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <CreateEmployee onClose={() => setShowCreateJSX(false)} refreshEmployees={fetchEmployees} />
-          </div>
-        )}
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {stats.map((stat) => {
+            const Icon = stat.icon;
 
+            return (
+              <div
+                key={stat.title}
+                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100">
+                    <Icon size={22} className="text-slate-700" />
+                  </div>
 
-        {showUpdateJSX && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <UpdateEmployee onClose={() => setShowUpdateJSX(false)} employee={selectedEmployee} refreshEmployees={fetchEmployees} />
-          </div>
-        )}
+                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
+                    {stat.change}
+                  </span>
+                </div>
 
-        <div className="mb-6 flex items-center justify-between">
-          <div className="relative w-full max-w-md">
-           
-            <Search
-              className="absolute left-4 top-3.5 text-slate-400"
-              size={18}
-            />
-            <input
-              type="text"
-              placeholder="Search employees..."
-              value={searchQuery}
-              onChange={(e)=>{setSearchQuery(e.target.value)}}
-              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 outline-none focus:border-slate-900"
-            />
-          </div>
-        </div>
+                <h3 className="mt-6 text-sm font-medium text-slate-500">
+                  {stat.title}
+                </h3>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b bg-slate-50">
-                <th className="px-6 py-4 text-left text-sm font-semibold">
-                  Employee
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold">
-                  Role
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold">
-                  Department
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filteredEmployees.map((employee) => (
-                <tr
-                  key={employee.id || employee._id} 
-                  className="border-b transition hover:bg-slate-50"
+                <p className="mt-2 text-3xl font-bold text-slate-900">
+                  {stat.value}
+                </p>
+                <button
+                className="cursor-pointer rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                onClick={() => navigate(`/${stat.page}`)}
                 >
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 font-semibold mb-0">
-                        {employee.name ? employee.name.charAt(0) : "E"}
-                      </div>
-                      <div>
-                        <p className="font-medium text-slate-900">
-                          {employee.name}
-                        </p>
-                        <p className="text-sm text-slate-500">
-                          {employee.id ? `EMP-${employee.id.toString().padStart(3, "0")}` : "EMP-000"}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="px-6 py-5 text-slate-700">
-                    {employee.role}
-                  </td>
-
-                  <td className="px-6 py-5 text-slate-700">
-                    {employee.department}
-                  </td>
-
-                  <td className="px-6 py-5">
-                    <div className="flex justify-end gap-2">
-                      <button 
-                        className="cursor-pointer rounded-lg border border-slate-200 p-2 transition hover:bg-slate-100"
-                        onClick={() => {
-                          setShowUpdateJSX(true);
-                          setSelectedEmployee(employee);
-                        }}
-                      >
-                        <Pencil size={18} />
-                      </button>
-
-                      <button 
-                        className="cursor-pointer rounded-lg border border-red-200 p-2 text-red-600 transition hover:bg-red-50"
-                        onClick={() => handleDelete(employee._id)} 
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                View
+                </button>
+              </div>
+            );
+          })}
         </div>
 
+        <div className="mt-8 grid gap-8 xl:grid-cols-3">
+          <div className="xl:col-span-2">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="mb-8 flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">
+                    Workforce Overview
+                  </h2>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    Employee growth and performance insights.
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700">
+                  This Month
+                </div>
+              </div>
+
+              <div className="flex h-[340px] items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50">
+                <div className="text-center">
+                  <TrendingUp
+                    size={40}
+                    className="mx-auto text-slate-400"
+                  />
+                  <p className="mt-4 font-medium text-slate-600">
+                    Analytics Section
+                  </p>
+                  <p className="mt-1 text-sm text-slate-400">
+                    Add charts and visual reports here
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-bold text-slate-900">
+                Quick Actions
+              </h2>
+
+              <div className="mt-6 space-y-3">
+                {quickActions.map((action) => {
+                  const Icon = action.icon;
+
+                  return (
+                    <button
+                      key={action.title}
+                      className="cursor-pointer flex w-full items-center justify-between rounded-2xl border border-slate-200 p-4 text-left transition hover:border-slate-300 hover:bg-slate-50"
+                      onClick={()=>action.onClick(true)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-xl bg-slate-100 p-2">
+                          <Icon size={18} />
+                        </div>
+
+                        <span className="font-medium text-slate-700">
+                          {action.title}
+                        </span>
+                      </div>
+
+                      <ArrowUpRight size={16} className="text-slate-400" />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center gap-3">
+                <Clock3 size={20} className="text-slate-700" />
+
+                <h2 className="text-xl font-bold text-slate-900">
+                  Recent Activity
+                </h2>
+              </div>
+
+              <div className="mt-6 space-y-5">
+                {activities.map((activity, index) => (
+                  <div
+                    key={index}
+                    className="flex gap-4 border-b border-slate-100 pb-5 last:border-none last:pb-0"
+                  >
+                    <div className="mt-2 h-2.5 w-2.5 rounded-full bg-slate-900" />
+
+                    <div>
+                      <h3 className="font-medium text-slate-800">
+                        {activity.title}
+                      </h3>
+
+                      <p className="mt-1 text-sm text-slate-500">
+                        {activity.description}
+                      </p>
+
+                      <p className="mt-2 text-xs text-slate-400">
+                        {activity.time}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">
+              New Hires
+            </p>
+
+            <h3 className="mt-3 text-4xl font-bold text-slate-900">
+              {employees.filter(isNewHire).length}
+            </h3>
+
+            <p className="mt-2 text-sm text-emerald-600">
+              +8% compared to last month
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">
+              Employees On Leave
+            </p>
+
+            <h3 className="mt-3 text-4xl font-bold text-slate-900">
+              {employees.filter(employee=>employee.status==="On Leave").length}
+            </h3>
+
+            <p className="mt-2 text-sm text-amber-600">
+              Currently unavailable
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">
+              Active Projects
+            </p>
+
+            <h3 className="mt-3 text-4xl font-bold text-slate-900">
+              23
+            </h3>
+
+            <p className="mt-2 text-sm text-sky-600">
+              Across all departments
+            </p>
+          </div>
+        </div>
       </div>
+      {showCreateEmployee && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <CreateEmployee onClose={() => setShowCreateEmployee(false)} refreshEmployees={fetchEmployees} />
+        </div>
+      )}
+      {showCreateDepartment && (
+        <CreateDepartment onClose={()=>setShowCreateDepartment(false)} refreshDepartments={fetchEmployees} />
+      )}
+
+
     </div>
   );
 }
