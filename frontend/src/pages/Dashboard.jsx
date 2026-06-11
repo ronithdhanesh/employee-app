@@ -372,7 +372,7 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
                 })}
               </div>
             </div>
-
+{/* 
             <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
               <div className="flex items-center gap-3">
                 <Clock3 size={20} className="text-slate-700" />
@@ -406,11 +406,11 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
+        {/* <div className="mt-8 grid gap-5 md:grid-cols-3">
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
             <p className="text-sm font-medium text-slate-500">
               New Hires
@@ -422,7 +422,7 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
 
           </div>
 
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+          {/* <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
             <p className="text-sm font-medium text-slate-500">
               Employees On Leave
             </p>
@@ -431,10 +431,10 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
               {employees.filter(employee=>employee.status==="On Leave").length}
             </h3>
 
-          </div>
+          </div> 
 
 
-        </div>
+        </div> */}
       </div>
       {showCreateEmployee && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
