@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get("/get", getLeaves)
 router.post("/create", createLeave)
-router.put("/update", updateLeave)
-router.delete("/delete", deleteLeave)
+router.patch("/update/:id", updateLeave)
+router.delete("/delete/:id", deleteLeave)
 
 module.exports = router

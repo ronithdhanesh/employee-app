@@ -1,4 +1,5 @@
 const LeaveModel = require("../models/leave.model");
+const EmployeeModel = require("../models/employee.model")
 
 async function createLeave(req, res) {
     try {
@@ -16,8 +17,12 @@ async function createLeave(req, res) {
 async function getLeaves(req, res) {
     try {
         const leaves = await LeaveModel.find({})
-            .populate("employee");
-
+            .populate({
+                path: "employeeId",
+                populate: {
+                    path: "departmentId"
+                }
+            });
         return res.status(200).json(leaves);
     } catch (err) {
         return res.status(400).json({
@@ -34,23 +39,41 @@ async function updateLeave(req, res) {
         const updatedLeave = await LeaveModel.findByIdAndUpdate(
             id,
             req.body,
-            { new: true, runValidators: true }
-        );
+            {
+                new: true,
+                runValidators: true,
+            }
+        ).populate({
+            path: "employeeId",
+            populate: {
+                path: "departmentId",
+            },
+        });
 
         if (!updatedLeave) {
             return res.status(404).json({
-                message: "Leave request not found"
+                message: "Leave request not found",
             });
+        }
+
+        if (updatedLeave.status === "Approved"){
+            await EmployeeModel.findByIdAndUpdate(
+                updatedLeave.employeeId,
+                {
+                    status: "On Leave"
+                }
+            );
         }
 
         return res.status(200).json(updatedLeave);
     } catch (err) {
         return res.status(400).json({
             message: "Failed to update leave request",
-            error: err.message
+            error: err.message,
         });
     }
 }
+
 
 async function deleteLeave(req, res) {
     try {

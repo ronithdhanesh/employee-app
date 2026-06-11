@@ -24,11 +24,13 @@ const createEmployeeSchema = yup.object({
 
   status: yup.string().required("Status is required"),
 
+
 });
 
 const CreateEmployee = ({ onClose, refreshEmployees }) => {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState(false)
 
   const {
     register,
@@ -54,19 +56,70 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
     }
   }
 
+  // async function handleFormSubmit(data) {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("firstName", data.firstName);
+  //     formData.append("lastName", data.lastName);
+  //     formData.append("email", data.email);
+  //     formData.append("phone", data.phone || "");
+  //     formData.append("designation", data.designation);
+  //     formData.append("departmentId", data.departmentId);
+  //     formData.append("hireDate", data.hireDate);
+  //     formData.append("status", data.status);
+  //     setLoading(true);
+
+  //     await api.post("/employee/create", data);
+  //     console.log(data)
+
+  //     await refreshEmployees();
+  //     onClose();
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
   async function handleFormSubmit(data) {
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      await api.post("/employee/create", data);
-      console.log(data)
+    const formData = new FormData();
 
-      await refreshEmployees();
-      onClose();
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
+    formData.append("firstName", data.firstName);
+    formData.append("lastName", data.lastName);
+    formData.append("email", data.email);
+    formData.append("phone", data.phone || "");
+    formData.append("designation", data.designation);
+    formData.append("departmentId", data.departmentId);
+    formData.append("hireDate", data.hireDate);
+    formData.append("status", data.status);
+
+    if (data.profileImage?.[0]) {
+      formData.append(
+        "profileImage",
+        data.profileImage[0]
+      );
+    }
+
+    await api.post(
+      "/employee/create",
+      formData,
+      {
+        headers: {
+          "Content-Type":
+            "multipart/form-data",
+        },
+      }
+    );
+
+    await refreshEmployees();
+    onClose();
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
     }
   }
 
@@ -75,7 +128,7 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="w-full max-w-4xl rounded-3xl bg-white p-8 shadow-2xl">
+      <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-bold text-slate-900">
@@ -249,6 +302,34 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
                 <option value="On Leave">On Leave</option>
                 <option value="Terminated">Terminated</option>
               </select>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Profile Image
+              </label>
+
+              <input
+                type="file"
+                accept="image/*"
+                {...register("profileImage")}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setPreview(URL.createObjectURL(file));
+                  }
+                }}
+
+                className={inputClass}
+              />
+
+              {preview && (
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="mt-3 h-24 w-24 rounded-full object-cover border"
+                />
+              )}
             </div>
 
           </div>

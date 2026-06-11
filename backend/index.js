@@ -9,6 +9,9 @@ const employeeRoutes = require('./routes/employee.routes')
 const authRoutes = require("./routes/auth.route")
 const deptRoutes = require("./routes/department.routes")
 const leaveRoutes = require("./routes/leave.route")
+const path = require("path");
+
+
 
 
 
@@ -18,7 +21,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/employee", employeeRoutes)
 app.use("/auth", authRoutes)

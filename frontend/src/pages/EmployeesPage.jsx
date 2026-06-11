@@ -9,7 +9,9 @@ import {
 import { useEffect, useState } from "react";
 import CreateEmployee from "../components/CreateEmployee";
 import UpdateEmployee from "../components/UpdateEmployee";
+import EmployeeCard from "../components/EmployeeCard";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 import api from "../api/axios";
 
 export default function EmployeesPage() {
@@ -17,10 +19,11 @@ export default function EmployeesPage() {
   const [showUpdateJSX, setShowUpdateJSX] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedEmployee, setSelectedEmployee] =
-    useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [showEmployeeDetails, setShowEmployeeDetails] = useState(false)
 
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const fetchEmployees = async () => {
     try {
@@ -90,23 +93,24 @@ export default function EmployeesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="min-h-screen bg-slate-50 p-8 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-slate-900">
+            
+            <h1 className="text-4xl font-bold">
               Employees
             </h1>
 
-            <p className="mt-2 text-slate-500">
+            <p className="mt-2 text-slate-500 dark:text-slate-400">
               Manage your organization's workforce
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <button
-              className="flex cursor-pointer items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              className="flex cursor-pointer items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-700"
               onClick={() =>
                 setShowCreateJSX(true)
               }
@@ -116,12 +120,18 @@ export default function EmployeesPage() {
             </button>
 
             <button
-              className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium text-slate-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+              className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium text-slate-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-red-950"
               onClick={handleLogout}
             >
               <LogOut size={18} />
               Logout
             </button>
+            {/* <button
+              onClick={toggleTheme}
+              className="rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium transition dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            >
+              {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+            </button> */}
           </div>
         </div>
 
@@ -150,6 +160,13 @@ export default function EmployeesPage() {
           />
         )}
 
+        {showEmployeeDetails && (
+          <EmployeeCard 
+            employee={selectedEmployee}
+            onClose={()=>{setShowEmployeeDetails(false)}}
+          />
+        )}
+
         {/* Search */}
         <div className="mb-6 flex items-center justify-between">
           <div className="relative w-full max-w-md">
@@ -167,16 +184,16 @@ export default function EmployeesPage() {
                   e.target.value
                 )
               }
-              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 outline-none focus:border-slate-900"
+              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 outline-none transition focus:border-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-400"
             />
           </div>
         </div>
 
         {/* Table */}
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
           <table className="w-full">
             <thead>
-              <tr className="border-b bg-slate-50">
+              <tr className="border-b bg-slate-50 dark:border-slate-700 dark:bg-slate-800">
                 <th className="px-6 py-4 text-left text-sm font-semibold">
                   Employee
                 </th>
@@ -204,18 +221,18 @@ export default function EmployeesPage() {
                 (employee) => (
                   <tr
                     key={employee._id}
-                    className="border-b transition hover:bg-slate-50"
+                    className="border-b transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
                   >
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 font-semibold">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 font-semibold dark:bg-slate-700">
                           {employee.firstName?.charAt(
                             0
                           )}
                         </div>
 
                         <div>
-                          <p className="font-medium text-slate-900">
+                          <p className="font-medium text-slate-900 dark:text-white">
                             {
                               employee.firstName
                             }{" "}
@@ -224,20 +241,26 @@ export default function EmployeesPage() {
                             }
                           </p>
 
-                          <p className="text-sm text-slate-500">
+                          <p className="text-sm text-slate-500 dark:text-slate-400">
                             {employee.email}
                           </p>
+                          {/* <img
+                            src={`http://localhost:3000${employee.profileImage}`}
+                            alt={employee.firstName}
+                            width={50}
+                            height={50}
+                          /> */}
                         </div>
                       </div>
                     </td>
 
-                    <td className="px-6 py-5 text-slate-700">
+                    <td className="px-6 py-5 text-slate-700 dark:text-slate-300">
                       {
                         employee.designation
                       }
                     </td>
 
-                    <td className="px-6 py-5 text-slate-700">
+                    <td className="px-6 py-5 text-slate-700 dark:text-slate-300">
                       {employee
                         .departmentId?.name ||
                         "N/A"}
@@ -256,32 +279,31 @@ export default function EmployeesPage() {
                     <td className="px-6 py-5">
                       <div className="flex justify-end gap-2">
                         <button
-                          className="cursor-pointer rounded-lg border border-slate-200 p-2 transition hover:bg-slate-100"
+                          className="cursor-pointer rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
                           onClick={() => {
-                            setSelectedEmployee(
-                              employee
-                            );
-                            setShowUpdateJSX(
-                              true
-                            );
+                            setShowEmployeeDetails(true)
+                            setSelectedEmployee(employee);
+                            // console.log(employee);
                           }}
                         >
-                          <Pencil
-                            size={18}
-                          />
+                          View Details
+                        </button>
+
+                        <button
+                          className="cursor-pointer rounded-lg border border-slate-200 p-2 transition hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+                          onClick={() => {
+                            setSelectedEmployee(employee);
+                            setShowUpdateJSX(true);
+                          }}
+                        >
+                          <Pencil size={18} />
                         </button>
 
                         <button
                           className="cursor-pointer rounded-lg border border-red-200 p-2 text-red-600 transition hover:bg-red-50"
-                          onClick={() =>
-                            handleDelete(
-                              employee._id
-                            )
-                          }
+                          onClick={() => handleDelete(employee._id)}
                         >
-                          <Trash2
-                            size={18}
-                          />
+                          <Trash2 size={18} />
                         </button>
                       </div>
                     </td>

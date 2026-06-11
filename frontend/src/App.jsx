@@ -10,6 +10,7 @@ import PublicRoute from './components/PublicRoute'
 import { Navigate } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import DepartmentsPage from './pages/Departments'
+import LeavesPage from './pages/LeavesPage'
 
 function App() {
 
@@ -21,6 +22,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/leaves'
+          element={
+            <ProtectedRoute>
+              <LeavesPage />
             </ProtectedRoute>
           }
         />

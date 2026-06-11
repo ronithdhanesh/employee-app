@@ -1,4 +1,5 @@
 const EmployeeModel = require('../models/employee.model.js')
+const upload = require("../upload/mutler.upload.js")
 
 const getEmployees = async(req, res) => {
     try {
@@ -12,10 +13,19 @@ const getEmployees = async(req, res) => {
 const createEmployee = async(req, res) =>{
     try {
         const data = req.body;
-        const newEmployee = await EmployeeModel.create(data)
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
+        console.log(req.headers["content-type"]);
+        const newEmployee = await EmployeeModel.create({
+            ...req.body,
+            profileImage : req.file ? `/uploads/${req.file.filename}` : null,
+        })
         res.json(newEmployee)
     } catch(err){
-        res.status(400).json(err)
+        res.status(400).json({
+            message: err.message,
+            error: err
+        })
     }
 }
 
