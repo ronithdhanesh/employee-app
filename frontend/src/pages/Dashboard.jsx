@@ -126,11 +126,11 @@ export default function Dashboard() {
     setDepartments(result.data)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    navigate("/login");
-  };
+    const handleLogout = () => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      navigate("/login");
+    };
 
   function isNewHire(employee) {
     const hireDate = new Date(employee.hireDate);
@@ -196,18 +196,22 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
             </p>
           </div>
 
-          <button className="cursor-pointer flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
-                  onClick={handleLogout}
-          >
-            Logout
-            <LogOut size={18} />
-          </button>
-          <button
-            onClick={toggleTheme}
-            className="cursor-pointer rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium transition dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-          >
-            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="cursor-pointer rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium transition dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            >
+              {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="cursor-pointer flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 font-medium transition dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            >
+              <LogOut size={18} />
+              Logout
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
