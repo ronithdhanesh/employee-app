@@ -37,9 +37,14 @@ const Login = () => {
             const response = await api.post(`/auth/login`, data)
             console.log(response.data);
             localStorage.setItem(
-            "token",
-            response.data.token
-            )
+                "accessToken",
+                response.data.accessToken
+            );
+
+            localStorage.setItem(
+                "refreshToken",
+                response.data.refreshToken
+            );
             
             navigate("/dashboard")
         } catch(err){

@@ -7,7 +7,7 @@ import {
   LogOut,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState , useCallback} from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import CreateDepartment from "../components/CreateDepartment";
@@ -54,10 +54,11 @@ export default function DepartmentsPage() {
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     navigate("/login");
-  };
+  }, [navigate]);
 
   const filteredDepartments =
     departments.filter((department) =>

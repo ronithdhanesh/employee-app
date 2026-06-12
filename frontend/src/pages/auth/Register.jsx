@@ -55,11 +55,16 @@ const Register = () => {
 
       const response = await api.post("/auth/register", newData)
       localStorage.setItem(
-          "token",
-          response.data.token
-      )
+        "accessToken",
+        response.data.accessToken
+      );
 
-      navigate("/EmployeesPage")
+      localStorage.setItem(
+        "refreshToken",
+        response.data.refreshToken
+      );
+
+      navigate("/dashboard")
       
 
       console.log(newData);

@@ -126,8 +126,9 @@ export default function Dashboard() {
     setDepartments(result.data)
   }
 
-    const handleLogout = () => {
-    localStorage.removeItem("token");
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     navigate("/login");
   };
 
@@ -372,69 +373,10 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
                 })}
               </div>
             </div>
-{/* 
-            <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-              <div className="flex items-center gap-3">
-                <Clock3 size={20} className="text-slate-700" />
 
-                <h2 className="text-xl font-bold text-slate-900">
-                  Recent Activity
-                </h2>
-              </div>
-
-              <div className="mt-6 space-y-5">
-                {activities.map((activity, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-4 border-b border-slate-100 pb-5 last:border-none last:pb-0"
-                  >
-                    <div className="mt-2 h-2.5 w-2.5 rounded-full bg-slate-900" />
-
-                    <div>
-                      <h3 className="font-medium text-slate-800">
-                        {activity.title}
-                      </h3>
-
-                      <p className="mt-1 text-sm text-slate-500">
-                        {activity.description}
-                      </p>
-
-                      <p className="mt-2 text-xs text-slate-400">
-                        {activity.time}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div> */}
           </div>
         </div>
 
-        {/* <div className="mt-8 grid gap-5 md:grid-cols-3">
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-            <p className="text-sm font-medium text-slate-500">
-              New Hires
-            </p>
-
-            <h3 className="mt-3 text-4xl font-bold text-slate-900 dark:text-slate-100">
-              {employees.filter(isNewHire).length}
-            </h3>
-
-          </div>
-
-          {/* <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-            <p className="text-sm font-medium text-slate-500">
-              Employees On Leave
-            </p>
-
-            <h3 className="mt-3 text-4xl font-bold text-slate-900 dark:text-slate-100">
-              {employees.filter(employee=>employee.status==="On Leave").length}
-            </h3>
-
-          </div> 
-
-
-        </div> */}
       </div>
       {showCreateEmployee && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

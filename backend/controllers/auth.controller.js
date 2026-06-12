@@ -21,16 +21,32 @@ const registerUser = async(req, res) =>{
             password : hashedPassword
         })
 
-        const token = jwt.sign(
-            { userId: user._id, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d" }
+        const accessToken = jwt.sign(
+        {
+            userId: user._id,
+            email: user.email
+        },
+        process.env.JWT_SECRET,
+        {
+            expiresIn: "15m"
+        }
+        );
+
+        const refreshToken = jwt.sign(
+        {
+            userId: user._id
+        },
+        process.env.REFRESH_SECRET,
+        {
+            expiresIn: "7d"
+        }
         );
 
         return res.status(201).json({
             message: "User registered successfully",
             user : user,
-            token
+            accessToken, 
+            refreshToken
         });
 
 
@@ -78,5 +94,40 @@ const loginUser = async(req, res) => {
     }
 }
 
+const refreshAccessToken = async (req, res) => {
+  const { refreshToken } = req.body;
 
-module.exports = {registerUser, loginUser}
+  if (!refreshToken) {
+    return res.status(401).json({
+      message: "Refresh token missing",
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_SECRET
+    );
+
+    const accessToken = jwt.sign(
+      {
+        userId: decoded.userId,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "15m",
+      }
+    );
+
+    return res.json({
+      accessToken,
+    });
+  } catch {
+    return res.status(403).json({
+      message: "Invalid refresh token",
+    });
+  }
+};
+
+
+module.exports = {registerUser, loginUser, refreshAccessToken}

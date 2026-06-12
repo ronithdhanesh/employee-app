@@ -55,7 +55,8 @@ export default function EmployeesPage() {
   );
 
   const handleLogout = useCallback(() => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     navigate("/login");
   }, [navigate]);
 
