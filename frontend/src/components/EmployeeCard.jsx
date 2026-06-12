@@ -6,8 +6,9 @@ import {
   Calendar,
   Clock,
 } from "lucide-react";
+import React from "react";
 
-export default function EmployeeCard({
+function EmployeeCard({
   employee,
   onClose,
 }) {
@@ -232,3 +233,5 @@ export default function EmployeeCard({
     </div>
   );
 }
+
+export default React.memo(EmployeeCard)

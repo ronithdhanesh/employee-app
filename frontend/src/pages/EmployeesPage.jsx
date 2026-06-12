@@ -6,13 +6,17 @@ import {
   LogOut,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
-import CreateEmployee from "../components/CreateEmployee";
-import UpdateEmployee from "../components/UpdateEmployee";
-import EmployeeCard from "../components/EmployeeCard";
+import { useEffect, useState, useMemo , useCallback} from "react";
+import EmployeeRow from "../components/EmployeeRow";
+import { lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import api from "../api/axios";
+
+const CreateEmployee = lazy(() => import("../components/CreateEmployee"));
+const UpdateEmployee = lazy(() => import("../components/UpdateEmployee"));
+const EmployeeCard = lazy(() => import("../components/EmployeeCard"));
+
 
 export default function EmployeesPage() {
   const [showCreateJSX, setShowCreateJSX] = useState(false);
@@ -25,35 +29,38 @@ export default function EmployeesPage() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
-  const fetchEmployees = async () => {
+  const fetchEmployees = useCallback(async () => {
     try {
       const result = await api.get("/employee/get");
       setEmployees(result.data);
     } catch (err) {
       console.log(err);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchEmployees();
-  }, []);
+  }, [fetchEmployees]);
 
-  async function handleDelete(id) {
-    try {
-      await api.delete(`/employee/delete/${id}`);
-      fetchEmployees();
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  const handleDelete = useCallback(
+    async (id) => {
+      try {
+        await api.delete(`/employee/delete/${id}`);
+        fetchEmployees();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [fetchEmployees]
+  );
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
     navigate("/login");
-  };
+  }, [navigate]);
 
-  const filteredEmployees = employees.filter(
-    (employee) => {
+  const filteredEmployees = useMemo(() => {
+    return employees.filter((employee) => {
       const query = searchQuery.toLowerCase();
 
       const fullName =
@@ -63,18 +70,24 @@ export default function EmployeesPage() {
 
       return (
         fullName.includes(query) ||
-        employee.email
-          ?.toLowerCase()
-          .includes(query) ||
-        employee.designation
-          ?.toLowerCase()
-          .includes(query) ||
+        employee.email?.toLowerCase().includes(query) ||
+        employee.designation?.toLowerCase().includes(query) ||
         employee.departmentId?.name
           ?.toLowerCase()
           .includes(query)
       );
-    }
-  );
+    });
+  }, [employees, searchQuery]);
+
+  const handleViewEmployee = useCallback((employee) => {
+  setSelectedEmployee(employee);
+  setShowEmployeeDetails(true);
+  }, []);
+
+  const handleEditEmployee = useCallback((employee) => {
+    setSelectedEmployee(employee);
+    setShowUpdateJSX(true);
+  }, []);
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -135,37 +148,39 @@ export default function EmployeesPage() {
           </div>
         </div>
 
-        {/* Create Modal */}
-        {showCreateJSX && (
-          <CreateEmployee
-            onClose={() =>
-              setShowCreateJSX(false)
-            }
-            refreshEmployees={
-              fetchEmployees
-            }
-          />
-        )}
 
-        {/* Update Modal */}
-        {showUpdateJSX && (
-          <UpdateEmployee
-            employee={selectedEmployee}
-            onClose={() =>
-              setShowUpdateJSX(false)
-            }
-            refreshEmployees={
-              fetchEmployees
-            }
-          />
-        )}
 
-        {showEmployeeDetails && (
-          <EmployeeCard 
-            employee={selectedEmployee}
-            onClose={()=>{setShowEmployeeDetails(false)}}
-          />
-        )}
+        <Suspense
+          fallback={
+            <div className="fixed inset-0 flex items-center justify-center">
+              Loading...
+            </div>
+          }
+        >
+          {showCreateJSX && (
+            <CreateEmployee
+              onClose={() => setShowCreateJSX(false)}
+              refreshEmployees={fetchEmployees}
+            />
+          )}
+
+          {showUpdateJSX && (
+            <UpdateEmployee
+              employee={selectedEmployee}
+              onClose={() => setShowUpdateJSX(false)}
+              refreshEmployees={fetchEmployees}
+            />
+          )}
+
+          {showEmployeeDetails && (
+            <EmployeeCard
+              employee={selectedEmployee}
+              onClose={() =>
+                setShowEmployeeDetails(false)
+              }
+            />
+          )}
+        </Suspense>
 
         {/* Search */}
         <div className="mb-6 flex items-center justify-between">
@@ -217,102 +232,18 @@ export default function EmployeesPage() {
             </thead>
 
             <tbody>
-              {filteredEmployees.map(
-                (employee) => (
-                  <tr
-                    key={employee._id}
-                    className="border-b transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
-                  >
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 font-semibold dark:bg-slate-700">
-                          {employee.firstName?.charAt(
-                            0
-                          )}
-                        </div>
+              {filteredEmployees.map((employee) => (
+                <EmployeeRow
+                  key={employee._id}
+                  employee={employee}
+                  onView={handleViewEmployee}
+                  onEdit={handleEditEmployee}
+                  onDelete={handleDelete}
+                  getStatusBadge={getStatusBadge}
+                />
+              ))}
 
-                        <div>
-                          <p className="font-medium text-slate-900 dark:text-white">
-                            {
-                              employee.firstName
-                            }{" "}
-                            {
-                              employee.lastName
-                            }
-                          </p>
-
-                          <p className="text-sm text-slate-500 dark:text-slate-400">
-                            {employee.email}
-                          </p>
-                          {/* <img
-                            src={`http://localhost:3000${employee.profileImage}`}
-                            alt={employee.firstName}
-                            width={50}
-                            height={50}
-                          /> */}
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-5 text-slate-700 dark:text-slate-300">
-                      {
-                        employee.designation
-                      }
-                    </td>
-
-                    <td className="px-6 py-5 text-slate-700 dark:text-slate-300">
-                      {employee
-                        .departmentId?.name ||
-                        "N/A"}
-                    </td>
-
-                    <td className="px-6 py-5">
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusBadge(
-                          employee.status
-                        )}`}
-                      >
-                        {employee.status}
-                      </span>
-                    </td>
-
-                    <td className="px-6 py-5">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          className="cursor-pointer rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
-                          onClick={() => {
-                            setShowEmployeeDetails(true)
-                            setSelectedEmployee(employee);
-                            // console.log(employee);
-                          }}
-                        >
-                          View Details
-                        </button>
-
-                        <button
-                          className="cursor-pointer rounded-lg border border-slate-200 p-2 transition hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
-                          onClick={() => {
-                            setSelectedEmployee(employee);
-                            setShowUpdateJSX(true);
-                          }}
-                        >
-                          <Pencil size={18} />
-                        </button>
-
-                        <button
-                          className="cursor-pointer rounded-lg border border-red-200 p-2 text-red-600 transition hover:bg-red-50"
-                          onClick={() => handleDelete(employee._id)}
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              )}
-
-              {filteredEmployees.length ===
-                0 && (
+              {filteredEmployees.length === 0 && (
                 <tr>
                   <td
                     colSpan="5"
