@@ -105,7 +105,6 @@ export default function DepartmentsPage() {
         </div>
 
 
-        {/* Search */}
         <div className="mb-8">
           <div className="relative max-w-md">
             <Search
@@ -125,14 +124,12 @@ export default function DepartmentsPage() {
           </div>
         </div>
 
-        {/* Department Cards */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredDepartments.map((department) => (
             <div
               key={department._id}
               className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             >
-              {/* Icon */}
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-700">
                 <Building2
                   size={28}
@@ -140,14 +137,12 @@ export default function DepartmentsPage() {
                 />
               </div>
 
-              {/* Name */}
               <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                 {department.name}
               </h3>
 
               
 
-              {/* Stats */}
               <div className="mt-5 rounded-xl bg-slate-50 p-4 dark:bg-slate-800">
                 <p className="text-sm text-slate-500 dark:text-slate-400">
                   Department Status
@@ -158,7 +153,6 @@ export default function DepartmentsPage() {
                 </p>
               </div>
 
-              {/* Actions */}
               <div className="mt-6 flex gap-2">
                 <button
                   onClick={() => {
@@ -187,7 +181,6 @@ export default function DepartmentsPage() {
           ))}
         </div>
 
-        {/* Empty State */}
         {filteredDepartments.length === 0 && (
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-20 text-center dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
             <Building2
@@ -206,7 +199,6 @@ export default function DepartmentsPage() {
           </div>
         )}
 
-        {/* Create Department Modal */}
         {showCreateDepartment && (
           <CreateDepartment
             onClose={() =>
@@ -216,7 +208,6 @@ export default function DepartmentsPage() {
           />
         )}
 
-        {/* Update Department Modal */}
         {showUpdateDepartment && (
           <UpdateDepartment
             department={selectedDepartment}

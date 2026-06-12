@@ -109,7 +109,6 @@ export default function EmployeesPage() {
   return (
     <div className="min-h-screen bg-slate-50 p-8 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             
@@ -183,7 +182,6 @@ export default function EmployeesPage() {
           )}
         </Suspense>
 
-        {/* Search */}
         <div className="mb-6 flex items-center justify-between">
           <div className="relative w-full max-w-md">
             <Search
@@ -205,7 +203,6 @@ export default function EmployeesPage() {
           </div>
         </div>
 
-        {/* Table */}
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
           <table className="w-full">
             <thead>

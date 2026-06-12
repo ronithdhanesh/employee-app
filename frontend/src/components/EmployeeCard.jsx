@@ -44,12 +44,10 @@ function EmployeeCard({
           </button>
         </div>
 
-        {/* Profile Section */}
         <div className="relative px-8 pb-8">
           <div className="-mt-16 flex flex-col items-center md:flex-row md:items-end md:justify-between">
             <div className="flex flex-col items-center md:flex-row md:items-end md:gap-6">
 
-              {/* Profile Image */}
               <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-white bg-slate-100 shadow-lg">
                 {employee.profileImage ? (
                   <img
@@ -64,7 +62,6 @@ function EmployeeCard({
                 )}
               </div>
 
-              {/* Name + Designation */}
               <div className="mt-4 text-center md:text-left">
                 <h2 className="text-3xl font-bold text-white">
                   {employee.firstName} {employee.lastName}
@@ -85,10 +82,8 @@ function EmployeeCard({
             </div>
           </div>
 
-          {/* Details Grid */}
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
 
-            {/* Contact Information */}
             <div className="rounded-2xl border border-slate-200 p-6">
               <h3 className="mb-5 text-lg font-semibold text-slate-900">
                 Contact Information
@@ -127,7 +122,6 @@ function EmployeeCard({
               </div>
             </div>
 
-            {/* Employment Details */}
             <div className="rounded-2xl border border-slate-200 p-6">
               <h3 className="mb-5 text-lg font-semibold text-slate-900">
                 Employment Details
@@ -184,7 +178,6 @@ function EmployeeCard({
               </div>
             </div>
 
-            {/* System Information */}
             <div className="rounded-2xl border border-slate-200 p-6 md:col-span-2">
               <h3 className="mb-5 text-lg font-semibold text-slate-900">
                 System Information

@@ -154,7 +154,6 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
           className="space-y-6"
         >
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {/* First Name */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 First Name
@@ -173,7 +172,6 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
               )}
             </div>
 
-            {/* Last Name */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Last Name
@@ -192,7 +190,6 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
               )}
             </div>
 
-            {/* Email */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Email Address
@@ -212,7 +209,6 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
               )}
             </div>
 
-            {/* Phone */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Phone Number
@@ -225,7 +221,6 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
               />
             </div>
 
-            {/* Designation */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Designation
@@ -244,7 +239,6 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
               )}
             </div>
 
-            {/* Department */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Department
@@ -269,7 +263,6 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
               )}
             </div>
 
-            {/* Hire Date */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Hire Date
@@ -288,7 +281,6 @@ const CreateEmployee = ({ onClose, refreshEmployees }) => {
               )}
             </div>
 
-            {/* Status */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Employment Status

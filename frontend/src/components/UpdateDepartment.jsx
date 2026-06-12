@@ -113,7 +113,6 @@ const UpdateDepartment = ({ department, onClose, refreshDepartments }) => {
               )}
             </div>
 
-            {/* Last Name */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Department Code

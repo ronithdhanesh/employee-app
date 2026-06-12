@@ -115,7 +115,6 @@ const Login = () => {
                             : 'outline-slate-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 dark:outline-neutral-600'
                         }`}
                     />
-                    {/* Dynamic Error Message */}
                     {errors.password && (
                         <p className="mt-1.5 text-xs text-red-600 dark:text-red-400 font-medium">
                         {errors.password.message}

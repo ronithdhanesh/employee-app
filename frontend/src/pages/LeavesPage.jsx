@@ -78,7 +78,6 @@ export default function LeavesPage() {
   return (
     <div className="min-h-screen bg-slate-50 p-8 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold">
             Leave Requests
@@ -89,7 +88,6 @@ export default function LeavesPage() {
           </p>
         </div>
 
-        {/* Search */}
         <div className="mb-6">
           <div className="relative max-w-md">
             <Search
@@ -109,7 +107,6 @@ export default function LeavesPage() {
           </div>
         </div>
 
-        {/* Table */}
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
           <table className="w-full">
             <thead>
@@ -146,7 +143,6 @@ export default function LeavesPage() {
                   key={leave._id}
                   className="border-b transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
                 >
-                  {/* Employee */}
                   <td className="px-6 py-5">
                     <div>
                       <p className="font-medium">
@@ -160,18 +156,15 @@ export default function LeavesPage() {
                     </div>
                   </td>
 
-                  {/* Department */}
                   <td className="px-6 py-5">
                     {leave.employeeId?.departmentId
                       ?.name || "N/A"}
                   </td>
 
-                  {/* Leave Type */}
                   <td className="px-6 py-5">
                     {leave.leaveType}
                   </td>
 
-                  {/* Dates */}
                   <td className="px-6 py-5">
                     <div className="text-sm">
                       <p>
@@ -192,7 +185,6 @@ export default function LeavesPage() {
                     </div>
                   </td>
 
-                  {/* Status */}
                   <td className="px-6 py-5">
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusBadge(
@@ -203,7 +195,6 @@ export default function LeavesPage() {
                     </span>
                   </td>
 
-                  {/* Actions */}
                   <td className="px-6 py-5">
                     <div className="flex justify-end gap-2">
                       {leave.status ===

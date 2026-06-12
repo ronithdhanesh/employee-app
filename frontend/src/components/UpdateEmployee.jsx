@@ -129,7 +129,6 @@ const UpdateEmployee = ({
           className="space-y-6"
         >
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {/* First Name */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 First Name
@@ -148,7 +147,6 @@ const UpdateEmployee = ({
               )}
             </div>
 
-            {/* Last Name */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Last Name
@@ -167,7 +165,6 @@ const UpdateEmployee = ({
               )}
             </div>
 
-            {/* Email */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Email Address
@@ -187,7 +184,6 @@ const UpdateEmployee = ({
               )}
             </div>
 
-            {/* Phone */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Phone Number
@@ -200,7 +196,6 @@ const UpdateEmployee = ({
               />
             </div>
 
-            {/* Designation */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Designation
@@ -219,10 +214,10 @@ const UpdateEmployee = ({
               )}
             </div>
 
-            {/* Department */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Department
+
               </label>
 
               <select
@@ -250,7 +245,6 @@ const UpdateEmployee = ({
               )}
             </div>
 
-            {/* Hire Date */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Hire Date
@@ -269,7 +263,6 @@ const UpdateEmployee = ({
               )}
             </div>
 
-            {/* Status */}
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Employment Status
