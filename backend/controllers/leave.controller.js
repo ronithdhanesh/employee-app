@@ -1,6 +1,7 @@
 const LeaveModel = require("../models/leave.model");
 const EmployeeModel = require("../models/employee.model")
 
+
 async function createLeave(req, res) {
     try {
         const leave = await LeaveModel.create(req.body);

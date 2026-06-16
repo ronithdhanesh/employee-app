@@ -10,11 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^5.4.0",
+    "@mui/x-date-pickers": "^9.5.0",
     "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.17.0",
+    "dayjs": "^1.11.21",
     "lucide-react": "^1.17.0",
     "react": "^19.2.6",
+    "react-calendar": "^6.0.1",
     "react-dom": "^19.2.6",
     "react-hook-form": "^7.78.0",
     "react-router-dom": "^7.17.0",

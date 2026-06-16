@@ -3,9 +3,10 @@ const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
 
 
+
 const registerUser = async(req, res) =>{
     try {
-        const {name, email, password} = req.body;
+        const {name, email, password, role} = req.body;
         const existingUser = await UserModel.findOne({email})
         if(existingUser){
             return res.status(400).json({
@@ -18,13 +19,15 @@ const registerUser = async(req, res) =>{
         const user = await UserModel.create({
             name : name,
             email: email,
-            password : hashedPassword
+            password : hashedPassword,
+            role : role
         })
 
         const accessToken = jwt.sign(
         {
             userId: user._id,
-            email: user.email
+            email: user.email,
+            role : user.role
         },
         process.env.JWT_SECRET,
         {
@@ -77,7 +80,8 @@ const loginUser = async(req, res) => {
         const token = jwt.sign(
             {
                 userId: user._id,
-                email: user.email
+                email: user.email,
+                role : user.role
             },
             process.env.JWT_SECRET,
             {
