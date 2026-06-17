@@ -7,22 +7,22 @@ export default function ProfileSection({
       <div className="flex items-center gap-5">
 
         <div className="flex h-24 w-24 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold">
-          {employee?.firstName?.[0]}
-          {employee?.lastName?.[0]}
+          {employee?.name?.[0]}
+          {/* {employee?.lastName?.[0]} */}
         </div>
 
         <div>
           <h2 className="text-2xl font-bold">
-            {employee?.firstName}{" "}
-            {employee?.lastName}
+            {employee?.name}{" "}
+            {/* {employee?.lastName} */}
           </h2>
 
           <p className="text-slate-500">
-            {employee?.designation}
+            {employee?.position}
           </p>
 
           <p className="text-slate-500">
-            {employee?.departmentId?.name}
+            {employee?.department?.name}
           </p>
         </div>
 

@@ -1,108 +1,132 @@
-const LeaveModel = require("../models/leave.model");
-const EmployeeModel = require("../models/employee.model")
+const LeaveRequest = require('../models/leave.model');
+const EmployeeModel = require('../models/employee.model');
 
+const applyLeave = async (req, res) => {
+  try {
+    const {
+      leaveType,
+      startDate,
+      endDate,
+      reason,
+    } = req.body;
 
-async function createLeave(req, res) {
-    try {
-        const leave = await LeaveModel.create(req.body);
-
-        return res.status(201).json(leave);
-    } catch (err) {
-        return res.status(400).json({
-            message: "Failed to create leave request",
-            error: err.message
-        });
+    if (
+      !leaveType ||
+      !startDate ||
+      !endDate ||
+      !reason
+    ) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
-}
 
-async function getLeaves(req, res) {
-    try {
-        const leaves = await LeaveModel.find({})
-            .populate({
-                path: "employeeId",
-                populate: {
-                    path: "departmentId"
-                }
-            });
-        return res.status(200).json(leaves);
-    } catch (err) {
-        return res.status(400).json({
-            message: "Failed to fetch leave requests",
-            error: err.message
+    const leave = await LeaveRequest.create({
+      employee: req.user.userId,
+      leaveType,
+      startDate,
+      endDate,
+      reason,
+    });
+
+    return res.status(201).json({
+      message: "Leave request submitted",
+      leave,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to submit leave request",
+    });
+  }
+};
+
+const getMyLeaves = async (req, res) => {
+  try {
+    const leaves =
+      await LeaveRequest.find({
+        employee: req.user.userId,
+      }).sort({
+        createdAt: -1,
+      });
+
+    return res.status(200).json(
+      leaves
+    );
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to fetch leaves",
+    });
+  }
+};
+
+const getAllLeaves = async (req, res) => {
+  try {
+    const leaves =
+      await LeaveRequest.find()
+        .populate(
+          "employee",
+        )
+        .sort({
+          createdAt: -1,
         });
+
+    return res.status(200).json(
+      leaves
+    );
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to fetch leaves",
+    });
+  }
+};
+
+const approveLeave = async (
+  req,
+  res
+) => {
+  try {
+    const leave =
+      await LeaveRequest.findById(
+        req.params.id
+      );
+
+    if (!leave) {
+      return res.status(404).json({
+        message:
+          "Leave request not found",
+      });
     }
-}
 
-async function updateLeave(req, res) {
-    try {
-        const { id } = req.params;
+    leave.status = "Approved";
 
-        const updatedLeave = await LeaveModel.findByIdAndUpdate(
-            id,
-            req.body,
-            {
-                new: true,
-                runValidators: true,
-            }
-        ).populate({
-            path: "employeeId",
-            populate: {
-                path: "departmentId",
-            },
-        });
+    leave.approvedBy = req.user.id;
 
-        if (!updatedLeave) {
-            return res.status(404).json({
-                message: "Leave request not found",
-            });
-        }
+    await leave.save();
 
-        if (updatedLeave.status === "Approved"){
-            await EmployeeModel.findByIdAndUpdate(
-                updatedLeave.employeeId,
-                {
-                    status: "On Leave"
-                }
-            );
-        }
+    return res.status(200).json({
+      message:
+        "Leave approved successfully",
+      leave,
+    });
+  } catch (error) {
+    console.error(error);
 
-        return res.status(200).json(updatedLeave);
-    } catch (err) {
-        return res.status(400).json({
-            message: "Failed to update leave request",
-            error: err.message,
-        });
-    }
-}
-
-
-async function deleteLeave(req, res) {
-    try {
-        const { id } = req.params;
-
-        const deletedLeave = await LeaveModel.findByIdAndDelete(id);
-
-        if (!deletedLeave) {
-            return res.status(404).json({
-                message: "Leave request not found"
-            });
-        }
-
-        return res.status(200).json({
-            message: "Leave request deleted successfully",
-            deletedLeave
-        });
-    } catch (err) {
-        return res.status(400).json({
-            message: "Failed to delete leave request",
-            error: err.message
-        });
-    }
-}
+    return res.status(500).json({
+      message:
+        "Failed to approve leave",
+    });
+  }
+};
 
 module.exports = {
-    createLeave,
-    getLeaves,
-    updateLeave,
-    deleteLeave
+  applyLeave,
+  getMyLeaves,
+  getAllLeaves,
+  approveLeave
 };

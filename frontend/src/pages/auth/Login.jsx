@@ -3,7 +3,6 @@ import { Link , useNavigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import axios from 'axios'
 import api from '../../api/axios'
 
 const Login = () => {
@@ -38,13 +37,11 @@ const Login = () => {
             console.log(response.data);
             localStorage.setItem(
                 "accessToken",
-                response.data.accessToken
+                response.data.token
             );
-
-            localStorage.setItem(
-                "refreshToken",
-                response.data.refreshToken
-            );
+            if (response.data.refreshToken) {
+                localStorage.setItem("refreshToken", response.data.refreshToken);
+            }
             
             navigate("/dashboard")
         } catch(err){

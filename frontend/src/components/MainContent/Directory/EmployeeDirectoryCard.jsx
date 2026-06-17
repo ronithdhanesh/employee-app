@@ -13,18 +13,17 @@ export default function EmployeeDirectoryCard({
       <div className="flex items-center gap-4">
 
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-lg font-bold">
-          {employee.firstName[0]}
-          {employee.lastName[0]}
+          {employee.name[0]}
+          {employee.name[0]}
         </div>
 
         <div>
           <h3 className="font-semibold">
-            {employee.firstName}{" "}
-            {employee.lastName}
+            {employee.name}{" "}
           </h3>
 
           <p className="text-sm text-slate-500">
-            {employee.designation}
+            {employee.position}
           </p>
         </div>
 
@@ -35,7 +34,7 @@ export default function EmployeeDirectoryCard({
         <div className="flex items-center gap-2">
           <Building2 size={16} />
           <span className="text-sm">
-            {employee.department}
+            {employee?.department?.name}
           </span>
         </div>
 

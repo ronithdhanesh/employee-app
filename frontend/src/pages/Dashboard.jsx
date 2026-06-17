@@ -105,20 +105,30 @@ export default function Dashboard() {
 
 
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const fetchLeaves = async () => {
     try {
-      const result = await api.get("/leave/get");
+      const result = await api.get("/leave/team");
       setLeaves(result.data);
     } catch (err) {
       console.log(err);
+      try {
+        const result = await api.get("/leave/all");
+        setLeaves(result.data);
+      } catch (innerErr) {
+        console.log(innerErr);
+      }
     }
   };
 
   const fetchEmployees = async () => {
-    const result = await api.get("/employee/get");
-    setEmployees(result.data);
+    try {
+      const result = await api.get("/employee/get");
+      setEmployees(result.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const fetchDepartments = async() =>{

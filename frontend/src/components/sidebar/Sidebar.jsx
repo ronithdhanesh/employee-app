@@ -7,15 +7,18 @@ import {
   LogOut,
 } from "lucide-react";
 
-import SidebarItem from "./SidebarItem";
 import { useNavigate } from "react-router-dom";
+
+import SidebarItem from "./SidebarItem";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Sidebar() {
   const navigate = useNavigate();
 
+  const { user, logout } = useAuth();
+
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    logout();
     navigate("/login");
   };
 
@@ -32,6 +35,7 @@ export default function Sidebar() {
           </p>
         </div>
 
+        {/* Main */}
         <div>
           <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
             Main
@@ -52,6 +56,7 @@ export default function Sidebar() {
           </div>
         </div>
 
+        {/* Workspace */}
         <div className="mt-8">
           <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
             Workspace
@@ -72,6 +77,30 @@ export default function Sidebar() {
           </div>
         </div>
 
+        {/* Admin Only */}
+        {user?.role === "admin" && (
+          <div className="mt-8">
+            <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+              Administration
+            </p>
+
+            <div className="space-y-1">
+              <SidebarItem
+                to="/employees"
+                icon={Users}
+                label="Employees"
+              />
+
+              <SidebarItem
+                to="/departments"
+                icon={Settings}
+                label="Departments"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Account */}
         <div className="mt-8">
           <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
             Account
@@ -90,16 +119,16 @@ export default function Sidebar() {
       <div className="border-t border-slate-200 pt-5 dark:border-slate-800">
         <div className="mb-4 flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-100 font-semibold dark:bg-slate-800">
-            JD
+            {user?.name?.charAt(0)?.toUpperCase() || "U"}
           </div>
 
           <div>
             <p className="font-medium text-slate-900 dark:text-white">
-              John Doe
+              {user?.name || "Loading..."}
             </p>
 
             <p className="text-sm text-slate-500">
-              Software Engineer
+              {user?.position || user?.role || ""}
             </p>
           </div>
         </div>
@@ -109,6 +138,7 @@ export default function Sidebar() {
           className="flex w-full cursor-pointer items-center gap-3 rounded-2xl px-4 py-3 text-slate-600 transition hover:bg-red-50 hover:text-red-600 dark:text-slate-300 dark:hover:bg-red-950"
         >
           <LogOut size={20} />
+
           <span className="font-medium">
             Logout
           </span>

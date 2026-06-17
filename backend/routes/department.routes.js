@@ -1,10 +1,12 @@
-const express = require('express')
-const {createDepartment, getDepartments, updateDepartment, deleteDepartment} = require("../controllers/department.controller")
+const express = require('express');
+const { createDepartment, getDepartments, updateDepartment, deleteDepartment } = require('../controllers/department.controller');
+const authMiddleware = require('../middleware/auth.middleware');
+const authorizeRoles = require('../middleware/role.middleware');
 
-const router = express.Router()
+const router = express.Router();
 
-router.post("/create", createDepartment )
-router.get("/get",getDepartments)
-router.put("/update/:id", updateDepartment)
-router.delete("/delete/:id", deleteDepartment)
-module.exports = router
+router.post('/create', authMiddleware, authorizeRoles('admin'), createDepartment);
+router.get('/get', getDepartments);
+router.put('/update/:id', authMiddleware, authorizeRoles('admin'), updateDepartment);
+router.delete('/delete/:id', authMiddleware, authorizeRoles('admin'), deleteDepartment);
+module.exports = router;

@@ -1,59 +1,51 @@
 import { useEffect, useState } from "react";
 import api from "../../../api/axios";
 
-export default function PersonalInfoForm() {
-
-  const [employee, setEmployee] =
-    useState(null);
-
+export default function PersonalInfoForm({ employee, onProfileUpdated }) {
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
+    address: "",
     phone: "",
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  async function fetchProfile() {
-
-    const employeeId =
-      localStorage.getItem("employeeId");
-
-    const res = await api.get(
-      `/employee/get/${employeeId}`
-    );
-
-    setEmployee(res.data);
-
-    setForm({
-      firstName: res.data.firstName,
-      lastName: res.data.lastName,
-      phone: res.data.phone || "",
-    });
-  }
+    if (employee) {
+      setForm({
+        name: employee.name || "",
+        address: employee.address || "",
+        phone: employee.phone || "",
+      });
+    }
+  }, [employee]);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    
+    setError("");
+    setMessage("");
 
     try {
-      await api.patch(
-        `/employee/update/${employee._id}`,
-        form
-      );
-
-      alert(
-        "Profile updated successfully"
-      );
+      setIsSaving(true);
+      await api.patch("/employee/profile", form);
+      setMessage("Profile updated successfully.");
+      if (onProfileUpdated) {
+        await onProfileUpdated();
+      }
     } catch (err) {
-      console.log(err);
+      setError(
+        err.response?.data?.message ||
+          "Unable to update profile."
+      );
+    } finally {
+      setIsSaving(false);
     }
   }
 
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-
       <h2 className="mb-6 text-xl font-semibold">
         Personal Information
       </h2>
@@ -62,19 +54,16 @@ export default function PersonalInfoForm() {
         onSubmit={handleSubmit}
         className="space-y-4"
       >
-
         <div>
-          <label>
-            First Name
+          <label className="block text-sm font-medium text-slate-700">
+            Full Name
           </label>
-
           <input
-            value={form.firstName}
+            value={form.name}
             onChange={(e) =>
               setForm({
                 ...form,
-                firstName:
-                  e.target.value,
+                fullName: e.target.value,
               })
             }
             className="mt-2 w-full rounded-xl border p-3"
@@ -82,17 +71,15 @@ export default function PersonalInfoForm() {
         </div>
 
         <div>
-          <label>
-            Last Name
+          <label className="block text-sm font-medium text-slate-700">
+            Address
           </label>
-
           <input
-            value={form.lastName}
+            value={form.address}
             onChange={(e) =>
               setForm({
                 ...form,
-                lastName:
-                  e.target.value,
+                address: e.target.value,
               })
             }
             className="mt-2 w-full rounded-xl border p-3"
@@ -100,32 +87,41 @@ export default function PersonalInfoForm() {
         </div>
 
         <div>
-          <label>
+          <label className="block text-sm font-medium text-slate-700">
             Phone
           </label>
-
           <input
             value={form.phone}
             onChange={(e) =>
               setForm({
                 ...form,
-                phone:
-                  e.target.value,
+                phone: e.target.value,
               })
             }
             className="mt-2 w-full rounded-xl border p-3"
           />
         </div>
 
+        {error && (
+          <p className="text-sm text-red-600">
+            {error}
+          </p>
+        )}
+
+        {message && (
+          <p className="text-sm text-emerald-600">
+            {message}
+          </p>
+        )}
+
         <button
           type="submit"
-          className="rounded-xl bg-slate-900 px-6 py-3 text-white"
+          disabled={isSaving}
+          className="rounded-xl bg-slate-900 px-6 py-3 text-white disabled:opacity-50"
         >
-          Save Changes
+          {isSaving ? "Saving..." : "Save Changes"}
         </button>
-
       </form>
-
     </div>
   );
 }

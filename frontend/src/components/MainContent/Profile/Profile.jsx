@@ -1,30 +1,56 @@
-import {
-  Mail,
-  Phone,
-  Building2,
-  UserCheck,
-  CalendarDays,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Mail, Phone, UserCheck } from "lucide-react";
+import api from "../../../api/axios";
 
 export default function Profile() {
+  const [employee, setEmployee] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const employee = {
-    firstName: "John",
-    lastName: "Doe",
-    email: "john@company.com",
-    phone: "+91 9876543210",
-    designation: "Software Engineer",
-    department: "Engineering",
-    hireDate: "2024-01-12",
-    status: "Active",
-    reportingManager: null,
-  };
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const res = await api.get("/auth/me");
+        setEmployee(res.data);
+      } catch (err) {
+        setError(
+          err.response?.data?.message ||
+            "Unable to load profile."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  const yearsAtCompany = Math.floor(
-    (Date.now() -
-      new Date(employee.hireDate)) /
-      (1000 * 60 * 60 * 24 * 365)
-  );
+    fetchProfile();
+  }, []);
+
+  const yearsAtCompany = employee
+    ? Math.floor(
+        (Date.now() - new Date(employee.joiningDate)) /
+          (1000 * 60 * 60 * 24 * 365)
+      )
+    : 0;
+
+  if (loading) {
+    return (
+      <main className="flex-1 p-8">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          Loading profile...
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="flex-1 p-8">
+        <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-red-700 shadow-sm">
+          {error}
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="flex-1 p-8">
@@ -38,26 +64,25 @@ export default function Profile() {
           <div className="flex items-center gap-6">
 
             <div className="flex h-24 w-24 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold">
-              {employee.firstName[0]}
-              {employee.lastName[0]}
+              {employee?.name?.[0]}
             </div>
 
             <div>
               <h2 className="text-3xl font-bold">
-                {employee.firstName}{" "}
-                {employee.lastName}
-              </h2>
+                {employee?.name} 
+              </h2> 
 
               <p className="mt-1 text-slate-500">
-                {employee.designation}
+                {employee?.position}
               </p>
 
+              {/* Fixed: Pointing directly to the populated department string property */}
               <p className="text-slate-500">
-                {employee.department}
+                {employee?.department?.name || "No Department Assigned"}
               </p>
 
               <span className="mt-3 inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                {employee.status}
+                {employee?.status}
               </span>
             </div>
 
@@ -79,7 +104,7 @@ export default function Profile() {
                   <p className="text-sm text-slate-500">
                     Email
                   </p>
-                  <p>{employee.email}</p>
+                  <p>{employee?.email}</p>
                 </div>
               </div>
 
@@ -89,7 +114,7 @@ export default function Profile() {
                   <p className="text-sm text-slate-500">
                     Phone
                   </p>
-                  <p>{employee.phone}</p>
+                  <p>{employee?.phone || "Not provided"}</p>
                 </div>
               </div>
 
@@ -101,9 +126,14 @@ export default function Profile() {
               Reporting Manager
             </h3>
 
-            {employee.reportingManager ? (
+            {employee?.reportingManager ? (
               <div>
-                Manager Details
+                <p className="text-sm text-slate-500">
+                  {employee.reportingManager.name}
+                </p>
+                <p className="text-sm text-slate-500">
+                  {employee.reportingManager.email}
+                </p>
               </div>
             ) : (
               <div className="flex items-center gap-3">
@@ -128,21 +158,27 @@ export default function Profile() {
               <p className="text-sm text-slate-500">
                 Designation
               </p>
-              <p>{employee.designation}</p>
+              <p>{employee?.position || "N/A"}</p>
             </div>
 
             <div>
               <p className="text-sm text-slate-500">
                 Department
               </p>
-              <p>{employee.department}</p>
+              {/* Fixed: Cleaner object target rendering */}
+              <p>{employee?.department?.name || "N/A"}</p>
             </div>
 
             <div>
               <p className="text-sm text-slate-500">
                 Hire Date
               </p>
-              <p>{employee.hireDate}</p>
+              {/* Optional UI enhancement: Formats ISO string into clean layout */}
+              <p>
+                {employee?.joiningDate 
+                  ? new Date(employee.joiningDate).toLocaleDateString() 
+                  : "N/A"}
+              </p>
             </div>
 
             <div>

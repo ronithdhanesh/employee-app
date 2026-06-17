@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
 
 
-
 const registerUser = async(req, res) =>{
     try {
         const {name, email, password, role} = req.body;
@@ -81,7 +80,7 @@ const loginUser = async(req, res) => {
             {
                 userId: user._id,
                 email: user.email,
-                role : user.role
+                role :  user.role
             },
             process.env.JWT_SECRET,
             {
@@ -97,6 +96,33 @@ const loginUser = async(req, res) => {
         res.status(400).json(err)
     }
 }
+
+const getUsers = async(req, res) =>{
+    try {
+        const users = await UserModel.find().populate("department").select("-password");
+        return res.status(200).json(users)
+    } catch(err){
+        res.status(400).json(err)
+    }
+}
+
+const getMe = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.userId)
+      .populate("department", "name code") 
+      .select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error fetching profile data" });
+  }
+};
+
 
 const refreshAccessToken = async (req, res) => {
   const { refreshToken } = req.body;
@@ -134,4 +160,4 @@ const refreshAccessToken = async (req, res) => {
 };
 
 
-module.exports = {registerUser, loginUser, refreshAccessToken}
+module.exports = {registerUser, loginUser, refreshAccessToken, getUsers, getMe}

@@ -1,46 +1,63 @@
 const mongoose = require("mongoose");
 
-const LeaveSchema = new mongoose.Schema(
+const LeaveRequestSchema = new mongoose.Schema(
   {
-    employeeId: {
+    employee: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Employees",
-      required: [true, "Leave request must belong to an employee"],
+      ref: "users",
+      required: true,
     },
 
     leaveType: {
       type: String,
-      required: [true, "Leave type is required"],
-      enum: ["Sick", "Annual", "Casual", "Maternity", "Paternity", "Unpaid"],
+      enum: [
+        "Annual",
+        "Sick",
+        "Personal",
+        "Emergency",
+      ],
+      required: true,
     },
 
     startDate: {
       type: Date,
-      required: [true, "Start date is required"],
+      required: true,
     },
 
     endDate: {
       type: Date,
-      required: [true, "End date is required"],
-    },
-
-    status: {
-      type: String,
-      enum: ["Pending", "Approved", "Rejected"],
-      default: "Pending",
+      required: true,
     },
 
     reason: {
       type: String,
-      trim: true,
-      maxLength: [500, "Reason text cannot exceed 500 characters"],
-    }
+      required: true,
+    },
+
+    status: {
+      type: String,
+      enum: [
+        "Pending",
+        "Approved",
+        "Rejected",
+      ],
+      default: "Pending",
+    },
+
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      default: null,
+    },
+
+    adminComment: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const LeaveModel = mongoose.model("Leave", LeaveSchema);
-
-module.exports = LeaveModel;
+module.exports = mongoose.model("LeaveRequest",LeaveRequestSchema);

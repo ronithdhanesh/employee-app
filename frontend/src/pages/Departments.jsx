@@ -10,8 +10,8 @@ import {
 import { useEffect, useState , useCallback} from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import CreateDepartment from "../components/CreateDepartment";
-import UpdateDepartment from "../components/UpdateDepartment";
+import CreateDepartment from "../v1-components/CreateDepartment";
+import UpdateDepartment from "../v1-components/UpdateDepartment";
 
 
 

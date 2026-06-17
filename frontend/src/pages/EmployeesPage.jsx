@@ -7,15 +7,15 @@ import {
 } from "lucide-react";
 
 import { useEffect, useState, useMemo , useCallback} from "react";
-import EmployeeRow from "../components/EmployeeRow";
+import EmployeeRow from "../v1-components/EmployeeRow";
 import { lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import api from "../api/axios";
 
-const CreateEmployee = lazy(() => import("../components/CreateEmployee"));
-const UpdateEmployee = lazy(() => import("../components/UpdateEmployee"));
-const EmployeeCard = lazy(() => import("../components/EmployeeCard"));
+const CreateEmployee = lazy(() => import("../v1-components/CreateEmployee"));
+const UpdateEmployee = lazy(() => import("../v1-components/UpdateEmployee"));
+const EmployeeCard = lazy(() => import("../v1-components/EmployeeCard"));
 
 
 export default function EmployeesPage() {

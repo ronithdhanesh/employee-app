@@ -2,7 +2,19 @@ const mongoose = require("mongoose");
 
 const EmployeeSchema = new mongoose.Schema(
   {
-    
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      unique: true,
+      sparse: true,
+    },
+
+    reportingManagerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Employees",
+      default: null,
+    },
+
     departmentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Department",

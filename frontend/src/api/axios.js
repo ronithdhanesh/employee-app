@@ -1,16 +1,17 @@
 import axios from "axios";
 
+const apiBaseURL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:3000";
+
 const api = axios.create({
-  baseURL:
-    "https://employee-app-backend-4vve.onrender.com/",
+  baseURL: apiBaseURL,
 });
 
 api.interceptors.request.use(
   (config) => {
     const accessToken =
-      localStorage.getItem(
-        "accessToken"
-      );
+      localStorage.getItem("accessToken");
 
     if (accessToken) {
       config.headers.Authorization =
@@ -19,13 +20,11 @@ api.interceptors.request.use(
 
     return config;
   },
-
   (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
   (response) => response,
-
   async (error) => {
     const originalRequest = error.config;
 
@@ -37,12 +36,10 @@ api.interceptors.response.use(
 
       try {
         const refreshToken =
-          localStorage.getItem(
-            "refreshToken"
-          );
+          localStorage.getItem("refreshToken");
 
         const response = await axios.post(
-          "https://employee-app-backend-4vve.onrender.com/auth/refresh",
+          `${apiBaseURL}/auth/refresh`,
           {
             refreshToken,
           }
@@ -62,10 +59,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         localStorage.clear();
-
-        window.location.href =
-          "/login";
-
+        window.location.href = "/login";
         return Promise.reject(err);
       }
     }

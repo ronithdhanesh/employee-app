@@ -8,16 +8,11 @@ import DirectoryGrid from "./DirectoryGrid";
 
 export default function Directory() {
   const [employees, setEmployees] = useState([]);
-  const [departments, setDepartments] =
-    useState([]);
+  const [departments, setDepartments] = useState([]);
 
-  const [searchQuery, setSearchQuery] =
-    useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [
-    selectedDepartment,
-    setSelectedDepartment,
-  ] = useState("All");
+  const [selectedDepartment,setSelectedDepartment] = useState("All");
 
   useEffect(() => {
     fetchEmployees();
@@ -27,7 +22,7 @@ export default function Directory() {
   async function fetchEmployees() {
     try {
       const res = await api.get(
-        "/employee/get"
+        "/auth/users"
       );
 
       setEmployees(res.data);
@@ -49,8 +44,7 @@ export default function Directory() {
   const filteredEmployees =
     employees.filter((employee) => {
 
-      const fullName =
-        `${employee.firstName} ${employee.lastName}`.toLowerCase();
+      const fullName = `${employee.name}`.toLowerCase();
 
       const matchesSearch =
         fullName.includes(
@@ -58,20 +52,16 @@ export default function Directory() {
         ) ||
         employee.email
           ?.toLowerCase()
-          .includes(
-            searchQuery.toLowerCase()
-          ) ||
-        employee.designation
+          .includes(searchQuery.toLowerCase()) ||
+        employee.position
           ?.toLowerCase()
-          .includes(
-            searchQuery.toLowerCase()
-          );
+          .includes(searchQuery.toLowerCase());
 
       const matchesDepartment =
         selectedDepartment === "All" ||
-        employee.departmentId?.name ===
-          selectedDepartment;
+        employee.department?._id === selectedDepartment;
 
+        
       return (
         matchesSearch &&
         matchesDepartment

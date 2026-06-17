@@ -1,46 +1,36 @@
-const leaves = [
-  {
-    type: "Annual",
-    start: "10 Jun 2026",
-    end: "15 Jun 2026",
-    status: "Approved",
-  },
-  {
-    type: "Sick",
-    start: "18 Jun 2026",
-    end: "18 Jun 2026",
-    status: "Approved",
-  },
-  {
-    type: "Casual",
-    start: "22 Jun 2026",
-    end: "22 Jun 2026",
-    status: "Pending",
-  },
-];
+export default function LeaveHistory({ leaves }) {
+  if (!leaves || leaves.length === 0) {
+    return (
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-6 text-xl font-semibold">
+          Leave History
+        </h2>
+        <p className="text-slate-500">
+          No leave requests to show yet.
+        </p>
+      </div>
+    );
+  }
 
-export default function LeaveHistory() {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-
       <h2 className="mb-6 text-xl font-semibold">
         Leave History
       </h2>
 
       <div className="space-y-3">
-
-        {leaves.map((leave, index) => (
+        {leaves.map((leave) => (
           <div
-            key={index}
+            key={leave._id}
             className="flex items-center justify-between rounded-2xl border p-4"
           >
             <div>
               <p className="font-semibold">
-                {leave.type}
+                {leave.leaveType}
               </p>
 
               <p className="text-sm text-slate-500">
-                {leave.start} - {leave.end}
+                {new Date(leave.startDate).toLocaleDateString()} - {new Date(leave.endDate).toLocaleDateString()}
               </p>
             </div>
 
@@ -57,9 +47,7 @@ export default function LeaveHistory() {
             </span>
           </div>
         ))}
-
       </div>
-
     </div>
   );
 }

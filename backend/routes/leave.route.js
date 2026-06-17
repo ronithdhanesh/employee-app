@@ -1,12 +1,18 @@
-const express = require("express")
-const {createLeave,getLeaves,updateLeave,deleteLeave} = require("../controllers/leave.controller")
-const authorizeRoles = require("../middleware/role.middleware")
-const authMiddleware = require("../middleware/auth.middleware")
-const router = express.Router()
+const express = require('express');
+const {
+  applyLeave,
+  getMyLeaves,
+  getAllLeaves,
+  approveLeave,
+  getAllLeaves
+} = require('../controllers/leave.controller');
+const authorizeRoles = require('../middleware/role.middleware');
+const authMiddleware = require('../middleware/auth.middleware');
 
-router.get("/get",authMiddleware, authorizeRoles("admin"), getLeaves)
-router.post("/create", authorizeRoles("admin", "user"), createLeave)
-router.patch("/update/:id", updateLeave)
-router.delete("/delete/:id", deleteLeave)
+const router = express.Router();
 
-module.exports = router
+router.post('/apply', authMiddleware, authorizeRoles('employee'), applyLeave);
+router.get('/my-leaves', authMiddleware, authorizeRoles('employee'), getMyLeaves);
+router.get("leaves", authMiddleware, authorizeRoles("admin"), getAllLeaves)
+
+module.exports = router;
