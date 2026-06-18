@@ -93,16 +93,16 @@ export default function EmployeesPage() {
   const getStatusBadge = (status) => {
     switch (status) {
       case "Active":
-        return "bg-green-100 text-green-700";
+        return "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200";
 
       case "On Leave":
-        return "bg-amber-100 text-amber-700";
+        return "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200";
 
       case "Terminated":
-        return "bg-red-100 text-red-700";
+        return "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200";
 
       default:
-        return "bg-slate-100 text-slate-700";
+        return "bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200";
     }
   };
 
@@ -152,7 +152,7 @@ export default function EmployeesPage() {
 
         <Suspense
           fallback={
-            <div className="fixed inset-0 flex items-center justify-center">
+            <div className="fixed inset-0 flex items-center justify-center bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
               Loading...
             </div>
           }
@@ -185,7 +185,7 @@ export default function EmployeesPage() {
         <div className="mb-6 flex items-center justify-between">
           <div className="relative w-full max-w-md">
             <Search
-              className="absolute left-4 top-3.5 text-slate-400"
+              className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500"
               size={18}
             />
 
@@ -245,7 +245,7 @@ export default function EmployeesPage() {
                 <tr>
                   <td
                     colSpan="5"
-                    className="py-10 text-center text-slate-500"
+                    className="py-10 text-center text-slate-500 dark:text-slate-400"
                   >
                     No employees found
                   </td>

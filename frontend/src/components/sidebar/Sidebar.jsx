@@ -5,17 +5,21 @@ import {
   Users,
   Settings,
   LogOut,
+  Moon,
+  Sun,
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
 
 import SidebarItem from "./SidebarItem";
 import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function Sidebar() {
   const navigate = useNavigate();
 
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = () => {
     logout();
@@ -30,14 +34,14 @@ export default function Sidebar() {
             HRMS
           </h1>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Employee Portal
           </p>
         </div>
 
         {/* Main */}
         <div>
-          <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+          <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase dark:text-slate-500">
             Main
           </p>
 
@@ -58,7 +62,7 @@ export default function Sidebar() {
 
         {/* Workspace */}
         <div className="mt-8">
-          <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+          <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase dark:text-slate-500">
             Workspace
           </p>
 
@@ -80,7 +84,7 @@ export default function Sidebar() {
         {/* Admin Only */}
         {user?.role === "admin" && (
           <div className="mt-8">
-            <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+            <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase dark:text-slate-500">
               Administration
             </p>
 
@@ -102,7 +106,7 @@ export default function Sidebar() {
 
         {/* Account */}
         <div className="mt-8">
-          <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase">
+          <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase dark:text-slate-500">
             Account
           </p>
 
@@ -118,7 +122,7 @@ export default function Sidebar() {
 
       <div className="border-t border-slate-200 pt-5 dark:border-slate-800">
         <div className="mb-4 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-100 font-semibold dark:bg-slate-800">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-100 font-semibold text-slate-900 dark:bg-slate-800 dark:text-slate-100">
             {user?.name?.charAt(0)?.toUpperCase() || "U"}
           </div>
 
@@ -127,11 +131,22 @@ export default function Sidebar() {
               {user?.name || "Loading..."}
             </p>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               {user?.position || user?.role || ""}
             </p>
           </div>
         </div>
+
+        <button
+          onClick={toggleTheme}
+          className="flex w-full cursor-pointer items-center gap-3 rounded-2xl px-4 py-3 text-slate-600 transition hover:bg-blue-50 hover:text-blue-600 dark:text-slate-300 dark:hover:bg-blue-950"
+        >
+          {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+
+          <span className="font-medium">
+            {theme === "light" ? "Dark Mode" : "Light Mode"}
+          </span>
+        </button>
 
         <button
           onClick={handleLogout}

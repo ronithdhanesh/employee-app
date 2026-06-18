@@ -88,7 +88,7 @@ export default function DepartmentsPage() {
               onClick={() =>
                 setShowCreateDepartment(true)
               }
-              className="flex cursor-pointer items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              className="flex cursor-pointer items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-700"
             >
               <Plus size={18} />
               Add Department
@@ -109,7 +109,7 @@ export default function DepartmentsPage() {
           <div className="relative max-w-md">
             <Search
               size={18}
-              className="absolute left-4 top-3.5 text-slate-400"
+              className="absolute left-4 top-3.5 text-slate-400 dark:text-slate-500"
             />
 
             <input

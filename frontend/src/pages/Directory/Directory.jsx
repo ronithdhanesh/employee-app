@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import api from "../../api/axios"
 
@@ -41,8 +41,8 @@ export default function Directory() {
     }
   }
 
-  const filteredEmployees =
-    employees.filter((employee) => {
+  const filteredEmployees = useMemo(()=>{
+    return employees.filter((employee) => {
 
       const fullName = `${employee.name}`.toLowerCase();
 
@@ -66,10 +66,10 @@ export default function Directory() {
         matchesSearch &&
         matchesDepartment
       );
-    });
+    })}, [employees, searchQuery, selectedDepartment]);
 
   return (
-    <main className="flex-1 p-8">
+    <main className="flex-1 p-8 bg-slate-50 dark:bg-slate-950">
       <div className="space-y-6">
 
         <DirectoryHeader />

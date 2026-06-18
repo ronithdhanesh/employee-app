@@ -5,20 +5,24 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import PublicRoute from "./routes/PublicRoute";
-import AppLayout from "./layouts/AppLayout";
+
 import Dashboard from "./pages/Dashboard/Dashboard"
-import Profile from "./pages/Profile/Profile"
 import Directory from "./pages/Directory/Directory";
 import Leaves from "./pages/Leaves/Leaves";
-import Settings from "./pages/Settings/Settings";
 import { AuthProvider } from "./context/AuthContext";
-import RoleBasedDirectory from "./routes/RoleBasedDirectory";
-import RoleBasedLeaves from "./routes/RoleBasedLeaves";
-import RoleBasedDashboard from "./routes/RoleBasedDashboard";
+
+
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const AppLayout = lazy(() => import("./layouts/AppLayout"));
+const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"));
+const PublicRoute = lazy(() => import("./routes/PublicRoute"));
+
+const Profile = lazy(() => import("./pages/Profile/Profile"));
+const Settings = lazy(() => import("./pages/Settings/Settings"));
+const RoleBasedDashboard = lazy(() => import("./routes/RoleBasedDashboard"));
+const RoleBasedDirectory = lazy(() => import("./routes/RoleBasedDirectory"));
+const RoleBasedLeaves = lazy(() => import("./routes/RoleBasedLeaves"));
 
 function App() {
   return (
@@ -26,7 +30,7 @@ function App() {
     <BrowserRouter>
       <Suspense
         fallback={
-          <div className="flex min-h-screen items-center justify-center">
+          <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
             Loading...
           </div>
         }

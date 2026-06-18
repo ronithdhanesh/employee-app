@@ -1,20 +1,22 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import api from '../../api/axios'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 const Register = () => {
-
-    const navigate = useNavigate()
-    const [registerError, setRegisterError] = useState("")
+  const navigate = useNavigate()
+  const { fetchUser } = useAuth() // Added useAuth hook
+  const [registerError, setRegisterError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const registerSchema = yup.object().shape({
-    name : yup
-        .string()
-        .required("Name is required"),
+    name: yup
+      .string()
+      .required("Name is required"),
     email: yup
       .string()
       .required('Email is required')
@@ -41,47 +43,48 @@ const Register = () => {
     mode: 'onChange',
   })
 
-  const onSubmit = async(data) => {
-    // console.log('Registration Data Successfully Validated:', data)
+  const onSubmit = async (data) => {
     try {
       setRegisterError("")
-      const {name, email, password} = data
+      setIsLoading(true)
+      const { name, email, password } = data
 
       const newData = {
-          name : name,
-          email : email,
-          password : password
+        name: name,
+        email: email,
+        password: password
       }
 
       const response = await api.post("/auth/register", newData)
+      
       localStorage.setItem(
         "accessToken",
         response.data.accessToken
-      );
+      )
 
       localStorage.setItem(
         "refreshToken",
         response.data.refreshToken
-      );
+      )
 
+      // Await context synchronization before routing
+      await fetchUser() 
       navigate("/dashboard")
-      
 
-      console.log(newData);
-    } catch(err){
+      console.log(newData)
+    } catch (err) {
       setRegisterError(err.response?.data?.message || "Something went wrong. Please try again.")
-      console.log(err);
+      console.log(err)
+    } finally {
+      setIsLoading(false)
     }
-    
-    
   }
 
   return (
     <div>
-      <main className="max-w-4xl flex items-center mx-auto md:min-h-screen p-4 md:p-8">
+      <main className="max-w-4xl flex items-center mx-auto md:min-h-screen p-4 md:p-8 dark:bg-neutral-900">
         <div className="grid items-center gap-y-10 bg-white border border-slate-100 [box-shadow:0_2px_10px_-3px_rgba(14,14,14,0.3)] rounded-lg overflow-hidden md:grid-cols-3 dark:bg-neutral-800 dark:border-neutral-700">
           
-         
           <div className="flex flex-col justify-center space-y-6 min-h-full bg-gradient-to-r from-slate-900 to-slate-700 p-6 max-md:order-1 md:space-y-16">
             <div>
               <h2 className="text-white text-lg font-medium dark:text-slate-50">Create Your Account</h2>
@@ -93,21 +96,18 @@ const Register = () => {
             </div>
           </div>
 
-        
           <div className="w-full py-6 px-6 max-w-lg mx-auto md:col-span-2 md:px-14">
             <div className="mb-10">
               <h1 className="text-slate-900 text-2xl font-bold dark:text-slate-50">Create an account</h1>
             </div>
 
-           
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              
               <div>
-                <label htmlFor="email" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">
+                <label htmlFor="name" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">
                   Full Name
                 </label>
                 <input 
-                  type="name" 
+                  type="text" 
                   id="name" 
                   placeholder="john@readymadeui.com"
                   {...register('name')}
@@ -142,7 +142,6 @@ const Register = () => {
                 )}
               </div>
 
-           
               <div>
                 <label htmlFor="password" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">
                   Password
@@ -163,7 +162,6 @@ const Register = () => {
                 )}
               </div>
 
-              
               <div>
                 <label htmlFor="confirmPassword" className="mb-2 text-slate-900 font-medium text-sm inline-block dark:text-slate-50">
                   Confirm password
@@ -184,7 +182,6 @@ const Register = () => {
                 )}
               </div>
 
-             
               <div>
                 <div className="flex items-start flex-wrap gap-2">
                   <label className="flex items-center group has-[input:checked]:text-slate-900">
@@ -217,13 +214,13 @@ const Register = () => {
               </div>
 
               {registerError && (
-                        <div className="p-3 rounded-md bg-red-100 text-red-700 text-sm">
-                            {registerError}
-                        </div>
-                    )}
+                <div className="p-3 rounded-md bg-red-100 text-red-700 text-sm dark:bg-red-900/30 dark:text-red-200">
+                  {registerError}
+                </div>
+              )}
 
-              <button type="submit" className="w-full py-2 px-3.5 text-sm rounded-md font-semibold cursor-pointer tracking-wide text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
-                Create an account
+              <button type="submit" disabled={isLoading} className="w-full py-2 px-3.5 text-sm rounded-md font-semibold cursor-pointer tracking-wide text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                {isLoading ? "Creating account..." : "Create an account"}
               </button>
             </form>
 

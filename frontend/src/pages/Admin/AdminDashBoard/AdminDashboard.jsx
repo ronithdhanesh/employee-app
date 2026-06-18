@@ -37,7 +37,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <main className="flex-1 p-8">
+    <main className="flex-1 p-8 bg-slate-50 dark:bg-slate-950">
       <div className="space-y-6">
 
         <AdminDashboardHeader />

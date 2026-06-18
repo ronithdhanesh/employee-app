@@ -70,8 +70,8 @@ export default function CalendarWidget({ leaves }) {
   };
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-xl font-semibold text-slate-900">
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:shadow-slate-900">
+      <h2 className="mb-4 text-xl font-semibold text-slate-900 dark:text-slate-100">
         Calendar
       </h2>
 
@@ -84,20 +84,20 @@ export default function CalendarWidget({ leaves }) {
       </LocalizationProvider>
 
 
-      <div className="mt-4 border-t border-slate-100 pt-4 flex flex-wrap items-center justify-center gap-6 text-xs font-medium">
+      <div className="mt-4 border-t border-slate-100 pt-4 flex flex-wrap items-center justify-center gap-6 text-xs font-medium dark:border-slate-700">
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-[#22c55e] shadow-xs" />
-          <span className="text-slate-600">Approved Leave</span>
+          <span className="text-slate-600 dark:text-slate-400">Approved Leave</span>
         </div>
         
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-[#f59e0b] shadow-xs" />
-          <span className="text-slate-600">Pending Request</span>
+          <span className="text-slate-600 dark:text-slate-400">Pending Request</span>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-[#ef4444] shadow-xs" />
-          <span className="text-slate-600">Rejected Leave</span>
+          <span className="text-slate-600 dark:text-slate-400">Rejected Leave</span>
         </div>
       </div>
     </div>

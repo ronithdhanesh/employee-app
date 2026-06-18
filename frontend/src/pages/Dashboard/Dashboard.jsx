@@ -39,7 +39,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <main className="flex-1 p-6 lg:p-8">
+    <main className="flex-1 p-6 lg:p-8 bg-slate-50 dark:bg-slate-950">
       <div className="w-full space-y-6">
         <WelcomeWidget
           name={user?.name || ""}

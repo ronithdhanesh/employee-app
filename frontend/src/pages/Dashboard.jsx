@@ -234,11 +234,11 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
                 className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100">
-                    <Icon size={22} className="text-slate-700" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
+                    <Icon size={22} className="text-slate-700 dark:text-slate-200" />
                   </div>
 
-                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
+                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
                     {stat.change}
                   </span>
                 </div>
@@ -251,7 +251,7 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
                   {stat.value}
                 </p>
                 <button
-                className="cursor-pointer rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                className="cursor-pointer rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
                 onClick={() => navigate(`/${stat.page}`)}
                 >
                 View
@@ -266,7 +266,7 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
               <div className="mb-8 flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
                     Workforce Overview
                   </h2>
 
@@ -275,7 +275,7 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
                   </p>
                 </div>
 
-                <div className="rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700">
+                <div className="rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-200">
                   This Month
                 </div>
               </div>
@@ -297,56 +297,56 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
 
               <div className="grid gap-4 md:grid-cols-2">
                 
-                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700">
-                  <p className="text-sm text-slate-500">
+                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700 dark:bg-slate-800/50">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     Active Employees
                   </p>
 
-                  <h3 className="mt-2 text-3xl font-bold">
+                  <h3 className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">
                     {activeEmployees}
                   </h3>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700">
-                  <p className="text-sm text-slate-500">
+                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700 dark:bg-slate-800/50">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     Employees On Leave
                   </p>
 
-                  <h3 className="mt-2 text-3xl font-bold text-amber-500">
+                  <h3 className="mt-2 text-3xl font-bold text-amber-500 dark:text-amber-400">
                     {employeesOnLeave}
                   </h3>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700">
-                  <p className="text-sm text-slate-500">
+                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700 dark:bg-slate-800/50">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     Pending Leave Requests
                   </p>
 
-                  <h3 className="mt-2 text-3xl font-bold text-orange-500">
+                  <h3 className="mt-2 text-3xl font-bold text-orange-500 dark:text-orange-400">
                     {pendingLeaves}
                   </h3>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700">
-                  <p className="text-sm text-slate-500">
+                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700 dark:bg-slate-800/50">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     Approved Leaves
                   </p>
 
-                  <h3 className="mt-2 text-3xl font-bold text-green-500">
+                  <h3 className="mt-2 text-3xl font-bold text-green-500 dark:text-green-400">
                     {approvedLeaves}
                   </h3>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700 md:col-span-2">
-                  <p className="text-sm text-slate-500">
+                <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700 dark:bg-slate-800/50 md:col-span-2">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     Largest Department
                   </p>
 
-                  <h3 className="mt-2 text-2xl font-bold">
+                  <h3 className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
                     {largestDepartment?.name || "N/A"}
                   </h3>
 
-                  <p className="mt-1 text-slate-500">
+                  <p className="mt-1 text-slate-500 dark:text-slate-400">
                     {largestDepartment?.count || 0} employees
                   </p>
                 </div>
@@ -357,7 +357,7 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
 
           <div>
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
                 Quick Actions
               </h2>
 
@@ -368,20 +368,20 @@ const largestDepartment =  departmentStats.sort((a, b) => b.count - a.count)[0];
                   return (
                     <button
                       key={action.title}
-                      className="cursor-pointer flex w-full items-center justify-between rounded-2xl border border-slate-200 p-4 text-left transition hover:border-slate-300 hover:bg-slate-50"
+                      className="cursor-pointer flex w-full items-center justify-between rounded-2xl border border-slate-200 p-4 text-left transition hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:hover:border-slate-600 dark:hover:bg-slate-800"
                       onClick={()=>action.onClick(true)}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="rounded-xl bg-slate-100 p-2">
-                          <Icon size={18} />
+                        <div className="rounded-xl bg-slate-100 p-2 dark:bg-slate-800">
+                          <Icon size={18} className="text-slate-700 dark:text-slate-200" />
                         </div>
 
-                        <span className="font-medium text-slate-700">
+                        <span className="font-medium text-slate-700 dark:text-slate-200">
                           {action.title}
                         </span>
                       </div>
 
-                      <ArrowUpRight size={16} className="text-slate-400" />
+                      <ArrowUpRight size={16} className="text-slate-400 dark:text-slate-500" />
                     </button>
                   );
                 })}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import api from "../../../api/axios";
 
 import AdminDirectoryStats from "./AdminDirectoryStats";
@@ -20,18 +20,16 @@ export default function AdminDirectory() {
     fetchDepartments();
   }, []);
 
-  async function fetchEmployees() {
+  const fetchEmployees = useCallback(async() => {
     try {
       const res = await api.get("/auth/users");
       setEmployees(res.data);
     } catch (err) {
       console.log(err);
     }
-  }
+  },[])
 
-  async function handleDelete(
-    id
-  ) {
+  const handleDelete = useCallback(async(id) => {
     const confirmed =
       window.confirm(
         "Delete this employee?"
@@ -48,7 +46,7 @@ export default function AdminDirectory() {
     } catch (err) {
       console.log(err);
     }
-  }
+  }, [])
 
   async function fetchDepartments() {
     try {
@@ -77,25 +75,27 @@ export default function AdminDirectory() {
     }
   }
 
-  const filteredEmployees = employees.filter((employee) => {
-    const matchesSearch =
-      employee.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      employee.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      employee.position?.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredEmployees = useMemo(() => {
+      return employees.filter((employee) => {
+        const matchesSearch =
+          employee.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          employee.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          employee.position?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesDepartment =
-      selectedDepartment === "All" ||
-      employee.department?._id === selectedDepartment;
+        const matchesDepartment =
+          selectedDepartment === "All" ||
+          employee.department?._id === selectedDepartment;
 
-    return matchesSearch && matchesDepartment;
-  });
+        return matchesSearch && matchesDepartment;
+      });
+    }, [employees, searchQuery, selectedDepartment]);
 
   return (
-    <main className="flex-1 p-8">
+    <main className="flex-1 p-8 bg-slate-50 dark:bg-slate-950">
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Employee Management</h1>
-          <p className="mt-2 text-slate-500">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Employee Management</h1>
+          <p className="mt-2 text-slate-500 dark:text-slate-400">
             Manage all employees in the organization.
           </p>
         </div>
@@ -136,6 +136,7 @@ export default function AdminDirectory() {
         <EditEmployeeModal
           employee={editingEmployee}
           departments={departments}
+          employees={employees}
           onClose={() => setEditingEmployee(null)}
           onSave={(data) =>
             handleSaveEmployee(
