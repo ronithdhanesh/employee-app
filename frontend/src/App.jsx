@@ -9,21 +9,16 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
-import PlaygroundPage from "./pages/PlaygroundPage";
-import Dashboard from "./components/MainContent/Dashboard/Dashboard";
-import Profile from "./components/MainContent/Profile/Profile";
-import Directory from "./components/MainContent/Directory/Directory";
-import Leaves from "./components/MainContent/Leaves/Leaves";
-import Settings from "./components/MainContent/Settings/Settings";
+import AppLayout from "./layouts/AppLayout";
+import Dashboard from "./pages/Dashboard/Dashboard"
+import Profile from "./pages/Profile/Profile"
+import Directory from "./pages/Directory/Directory";
+import Leaves from "./pages/Leaves/Leaves";
+import Settings from "./pages/Settings/Settings";
 import { AuthProvider } from "./context/AuthContext";
-
-const EmployeesPage = lazy(() =>
-  import("./pages/EmployeesPage")
-);
-
-const DepartmentsPage = lazy(() =>
-  import("./pages/Departments")
-);
+import RoleBasedDirectory from "./routes/RoleBasedDirectory";
+import RoleBasedLeaves from "./routes/RoleBasedLeaves";
+import RoleBasedDashboard from "./routes/RoleBasedDashboard";
 
 function App() {
   return (
@@ -59,18 +54,18 @@ function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <PlaygroundPage />
+                <AppLayout />
               </ProtectedRoute>
             }
           >
-            <Route index element={<Dashboard />} />
+            <Route index element={<RoleBasedDashboard />} />
             <Route
               path="dashboard"
-              element={<Navigate to="/" replace />}
+              element={<RoleBasedDashboard />}
             />
             <Route path="profile" element={<Profile />} />
-            <Route path="leaves" element={<Leaves />} />
-            <Route path="directory" element={<Directory />} />
+            <Route path="leaves" element={<RoleBasedLeaves />} />
+            <Route path="directory" element={<RoleBasedDirectory />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 

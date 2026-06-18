@@ -63,6 +63,31 @@ const getMyLeaves = async (req, res) => {
   }
 };
 
+const rejectLeave = async (req, res) => {
+  try {
+    const leave = await LeaveRequest.findById(req.params.id);
+
+    if (!leave) {
+      return res.status(404).json({
+        message: "Leave request not found",
+      });
+    }
+
+    leave.status = "Rejected";
+
+    await leave.save();
+
+    return res.status(200).json({
+      message: "Leave rejected successfully",
+      leave,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to reject leave",
+    });
+  }
+};
+
 const getAllLeaves = async (req, res) => {
   try {
     const leaves =
@@ -128,5 +153,6 @@ module.exports = {
   applyLeave,
   getMyLeaves,
   getAllLeaves,
-  approveLeave
+  approveLeave,
+  rejectLeave
 };

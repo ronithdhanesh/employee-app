@@ -11,14 +11,15 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchUser();
   }, []);
 
   async function fetchUser() {
+    setLoading(true);
+
     try {
       const res = await api.get("/auth/me");
       setUser(res.data);
@@ -30,13 +31,25 @@ export function AuthProvider({ children }) {
     }
   }
 
+  function logout() {
+    localStorage.removeItem(
+      "accessToken"
+    );
+
+    localStorage.removeItem(
+      "refreshToken"
+    );
+
+    setUser(null);
+  }
+
   return (
     <AuthContext.Provider
       value={{
         user,
-        setUser,
         loading,
         fetchUser,
+        logout,
       }}
     >
       {children}

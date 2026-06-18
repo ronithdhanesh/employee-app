@@ -106,10 +106,112 @@ const getUsers = async(req, res) =>{
     }
 }
 
+const updateUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await UserModel.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const {
+      name,
+      email,
+      phone,
+      position,
+      role,
+      status,
+      department,
+      joiningDate,
+      reportingManager,
+    } = req.body;
+
+    if (name !== undefined) {
+      user.name = name;
+    }
+
+    if (email !== undefined) {
+      user.email = email;
+    }
+
+    if (phone !== undefined) {
+      user.phone = phone;
+    }
+
+    if (position !== undefined) {
+      user.position = position;
+    }
+
+    if (role !== undefined) {
+      user.role = role;
+    }
+
+    if (status !== undefined) {
+      user.status = status;
+    }
+
+    if (department !== undefined) {
+      user.department =
+        department === ""
+          ? null
+          : department;
+    }
+
+    if (joiningDate !== undefined) {
+      user.joiningDate =
+        joiningDate === ""
+          ? null
+          : joiningDate;
+    }
+
+    if (reportingManager !== undefined) {
+      user.reportingManager =
+        reportingManager === ""
+          ? null
+          : reportingManager;
+    }
+
+    await user.save();
+
+    const updatedUser =
+      await UserModel.findById(
+        user._id
+      )
+        .populate(
+          "department"
+        )
+        .populate(
+          "reportingManager",
+          "name email position"
+        )
+        .select("-password");
+
+    return res.status(200).json({
+      message:
+        "User updated successfully",
+      user: updatedUser,
+        });
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+        message:
+            "Failed to update user",
+        });
+    }
+    };
+
 const getMe = async (req, res) => {
   try {
     const user = await UserModel.findById(req.user.userId)
-      .populate("department", "name code") 
+      .populate("department", "name code")
+      .populate("reportingManager",
+"name email position"
+        ) 
       .select("-password");
 
     if (!user) {
@@ -120,6 +222,61 @@ const getMe = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error fetching profile data" });
+  }
+};
+
+const getUserById = async (req, res) => {
+  try {
+    const user = await UserModel.findById(
+      req.params.id
+    )
+      .populate("department")
+      .select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({
+      message: "Failed to fetch user",
+    });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const user =
+      await UserModel.findById(
+        req.params.id
+      );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    await UserModel.findByIdAndDelete(
+      req.params.id
+    );
+
+    return res.status(200).json({
+      message:
+        "User deleted successfully",
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({
+      message:
+        "Failed to delete user",
+    });
   }
 };
 
@@ -160,4 +317,4 @@ const refreshAccessToken = async (req, res) => {
 };
 
 
-module.exports = {registerUser, loginUser, refreshAccessToken, getUsers, getMe}
+module.exports = {registerUser, loginUser, refreshAccessToken, getUsers, getMe, getUserById,updateUserById, deleteUser}

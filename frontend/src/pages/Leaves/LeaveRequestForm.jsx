@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../../../api/axios";
+import api from "../../api/axios"
 
 export default function LeaveRequestForm({
   // onLeaveApplied,
@@ -216,7 +216,7 @@ export default function LeaveRequestForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-xl bg-slate-900 py-3 text-white disabled:opacity-50"
+          className="cursor-pointer w-full rounded-xl bg-slate-900 py-3 text-white disabled:opacity-50"
         >
           {isSubmitting
             ? "Submitting..."

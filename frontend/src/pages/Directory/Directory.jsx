@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import api from "../../../api/axios";
+import api from "../../api/axios"
 
 import DirectoryHeader from "./DirectoryHeader";
 import DirectoryFilters from "./DirectoryFilters";

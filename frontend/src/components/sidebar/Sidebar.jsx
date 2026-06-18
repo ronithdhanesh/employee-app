@@ -23,7 +23,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="flex h-screen w-72 flex-col justify-between border-r border-slate-200 bg-white px-5 py-6 dark:border-slate-800 dark:bg-slate-950">
+    <aside className="fixed left-0 top-0 flex h-screen w-72 flex-col justify-between border-r border-slate-200 bg-white px-5 py-6 dark:border-slate-800 dark:bg-slate-950 overflow-y-auto">
       <div>
         <div className="mb-10">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">

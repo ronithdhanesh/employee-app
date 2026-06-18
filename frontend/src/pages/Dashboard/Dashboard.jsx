@@ -4,7 +4,7 @@ import AnnouncementsWidget from "./AnnouncementsWidget";
 import LeaveSummaryWidget from "./LeaveSummaryWidget";
 import UpcomingLeavesWidget from "./UpcomingLeavesWidget";
 
-import api from "../../../api/axios";
+import api from "../../api/axios"
 
 import { useEffect, useState } from "react";
 

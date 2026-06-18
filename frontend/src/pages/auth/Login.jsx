@@ -3,6 +3,7 @@ import { Link , useNavigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useAuth } from '../../context/AuthContext'
 import api from '../../api/axios'
 
 const Login = () => {
@@ -23,6 +24,7 @@ const Login = () => {
     })
 
     const navigate = useNavigate();
+    const { fetchUser } = useAuth();
 
     const [loginError, setLoginError] = useState("");
 
@@ -34,7 +36,7 @@ const Login = () => {
         try {
             setLoginError("")
             const response = await api.post(`/auth/login`, data)
-            console.log(response.data);
+            // console.log(response.data);
             localStorage.setItem(
                 "accessToken",
                 response.data.token
@@ -42,7 +44,8 @@ const Login = () => {
             if (response.data.refreshToken) {
                 localStorage.setItem("refreshToken", response.data.refreshToken);
             }
-            
+
+            await fetchUser();
             navigate("/dashboard")
         } catch(err){
             console.log(err);

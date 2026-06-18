@@ -56,6 +56,19 @@ const UserSchema = new mongoose.Schema(
       default: null
     },
 
+    reportingManager: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      default: null,
+      validate: {
+        validator(value) {
+          return value !== this._id;
+        },
+        message:
+          "User cannot be their own reporting manager",
+      },
+    },
+
     joiningDate: {
       type: Date,
       default: null

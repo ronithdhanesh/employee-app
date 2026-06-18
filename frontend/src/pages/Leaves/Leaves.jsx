@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../api/axios";
+import api from "../../api/axios"
 import LeaveStats from "./LeaveStats";
 import LeaveRequestForm from "./LeaveRequestForm";
 import LeaveHistory from "./LeaveHistory";

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Mail, Phone, UserCheck } from "lucide-react";
-import api from "../../../api/axios";
+import api from "../../api/axios"
 
 export default function Profile() {
   const [employee, setEmployee] = useState(null);
@@ -128,7 +128,7 @@ export default function Profile() {
 
             {employee?.reportingManager ? (
               <div>
-                <p className="text-sm text-slate-500">
+                <p className="text-m text-slate-800 font-semibold">
                   {employee.reportingManager.name}
                 </p>
                 <p className="text-sm text-slate-500">
