@@ -71,7 +71,7 @@ export default function Leaves() {
         <div className="grid gap-6 xl:grid-cols-3">
           <div className="xl:col-span-1">
             <LeaveRequestForm
-              // onLeaveApplied={fetchLeaves}
+               onLeaveApplied={fetchLeaves}
             />
           </div>
 

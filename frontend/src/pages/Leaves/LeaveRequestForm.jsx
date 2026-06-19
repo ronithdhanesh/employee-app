@@ -2,7 +2,7 @@ import { useState } from "react";
 import api from "../../api/axios"
 
 export default function LeaveRequestForm({
-  // onLeaveApplied,
+   onLeaveApplied,
 }) {
   const [form, setForm] = useState({
     leaveType: "Sick",
@@ -76,9 +76,9 @@ export default function LeaveRequestForm({
         "Leave request submitted successfully."
       );
 
-      // if (onLeaveApplied) {
-      //   await onLeaveApplied();
-      // }
+      if (onLeaveApplied) {
+        await onLeaveApplied();
+      }
     } catch (err) {
       setError(
         err.response?.data?.message ||
