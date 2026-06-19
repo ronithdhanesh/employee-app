@@ -81,7 +81,7 @@ export default function Sidebar() {
           </div>
         </div>
 
-        {/* Admin Only */}
+        {/* Admin Only
         {user?.role === "admin" && (
           <div className="mt-8">
             <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase dark:text-slate-500">
@@ -102,7 +102,7 @@ export default function Sidebar() {
               />
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Account */}
         <div className="mt-8">
